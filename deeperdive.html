@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Cummings &amp; Davy Families — An American Lineage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f7f4ef;
+    --paper-deep:#efe9e0;
+    --ink:#221f1a;
+    --ink-soft:#5c564c;
+    --ink-faint:#8a8377;
+    --line:#ddd5c8;
+    --davy:#2f5d46;        /* muted Irish green */
+    --davy-soft:#e3ece6;
+    --cummings:#8a4b2f;    /* muted clay */
+    --cummings-soft:#f0e4dc;
+    --union:#6b5d3f;
+    --union-soft:#ece5d4;
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Outfit',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:'Fraunces',serif}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+  /* ---------- BACK LINK ---------- */
+  .back-link{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Outfit',sans-serif;
+    font-size:13px;font-weight:500;letter-spacing:.02em;
+    color:var(--ink-soft);text-decoration:none;
+    padding:8px 16px;border-radius:999px;
+    border:1px solid var(--line);background:#fffdf9;
+    margin-bottom:28px;
+    transition:transform .15s cubic-bezier(.16,1,.3,1),background .2s,color .2s,border-color .2s;
+  }
+  .back-link:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .back-link:active{transform:scale(.96)}
+  .back-link svg{flex:none}
+
+  /* ---------- HERO ---------- */
+  header{
+    padding:40px 0 40px;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--davy);font-weight:600;margin-bottom:18px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .eyebrow::after{content:"";height:1px;width:56px;background:var(--davy);opacity:.4}
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:clamp(2.1rem,6vw,3.6rem);
+    line-height:1.08;
+    letter-spacing:-.015em;
+    max-width:17ch;
+  }
+  h1 em{font-style:italic;font-weight:400;color:var(--cummings)}
+  .hero-sub{
+    margin-top:22px;max-width:58ch;color:var(--ink-soft);
+    font-size:clamp(.98rem,2.6vw,1.08rem);font-weight:300;
+  }
+  .hero-meta{
+    margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 26px;
+    font-size:13px;color:var(--ink-faint);
+  }
+  .hero-meta span b{color:var(--ink);font-weight:500}
+
+  /* ---------- JOURNEY STRIP ---------- */
+  .journey{
+    display:flex;align-items:stretch;gap:0;
+    margin:36px 0 0;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding-bottom:6px;
+  }
+  .journey::-webkit-scrollbar{display:none}
+  .leg{
+    flex:1 0 auto;min-width:172px;
+    padding:16px 18px 14px;
+    border-left:1px solid var(--line);
+    position:relative;
+  }
+  .leg:first-child{border-left:none;padding-left:0}
+  .leg .yr{font-family:'Fraunces',serif;font-size:1.25rem;font-weight:500}
+  .leg .pl{font-size:13px;color:var(--ink-soft);margin-top:2px}
+  .leg .why{font-size:12px;color:var(--ink-faint);margin-top:8px;max-width:22ch;line-height:1.45}
+
+  /* ---------- SECTION HEADINGS ---------- */
+  section{padding:56px 0 8px}
+  .sec-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    gap:16px;flex-wrap:wrap;margin-bottom:8px;
+  }
+  h2{
+    font-family:'Fraunces',serif;font-weight:500;
+    font-size:clamp(1.45rem,4vw,2rem);letter-spacing:-.01em;
+  }
+  .sec-note{font-size:13px;color:var(--ink-faint);max-width:44ch}
+
+  /* ---------- FILTER ---------- */
+  .filters{
+    position:sticky;top:0;z-index:30;
+    background:linear-gradient(var(--paper) 82%,rgba(247,244,239,0));
+    padding:14px 0 18px;
+    display:flex;gap:8px;flex-wrap:wrap;
+  }
+  .fbtn{
+    font-family:'Outfit',sans-serif;
+    font-size:13px;font-weight:500;letter-spacing:.02em;
+    padding:8px 16px;border-radius:999px;
+    border:1px solid var(--line);background:#fffdf9;color:var(--ink-soft);
+    cursor:pointer;transition:transform .15s cubic-bezier(.16,1,.3,1),background .2s,color .2s,border-color .2s;
+  }
+  .fbtn:active{transform:scale(.96)}
+  .fbtn[data-active="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .fbtn .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:1px}
+  .fbtn[data-line="davy"] .dot{background:var(--davy)}
+  .fbtn[data-line="cummings"] .dot{background:var(--cummings)}
+
+  /* ---------- TREE ---------- */
+  .gen{margin-bottom:8px;padding:26px 0 20px;border-top:1px solid var(--line)}
+  .gen:first-of-type{border-top:none}
+  .gen-label{
+    display:flex;align-items:baseline;gap:14px;margin-bottom:18px;
+  }
+  .gen-num{
+    font-family:'Fraunces',serif;font-style:italic;font-weight:400;
+    font-size:1.05rem;color:var(--ink-faint);
+  }
+  .gen-title{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  .gen-sub{font-size:12px;color:var(--ink-faint);width:100%;margin-top:-10px;margin-bottom:16px}
+
+  .row{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:12px;
+  }
+  .couple{
+    grid-column:span 2;
+    display:grid;grid-template-columns:1fr 1fr;gap:0;
+    border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;background:#fffdf9;
+  }
+  @media(max-width:560px){
+    .row{grid-template-columns:1fr 1fr}
+    .couple{grid-column:span 2}
+  }
+  .person{
+    padding:14px 16px 13px;
+    background:#fffdf9;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    cursor:pointer;position:relative;
+    transition:transform .18s cubic-bezier(.16,1,.3,1),box-shadow .18s,border-color .2s,opacity .3s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .couple .person{border:none;border-radius:0}
+  .couple .person:first-child{border-right:1px dashed var(--line)}
+  .couple .person::after{display:none}
+  .couple{position:relative}
+  .couple::before{
+    content:"⚭";
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    background:#fffdf9;border:1px solid var(--line);border-radius:50%;
+    width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+    font-size:13px;color:var(--ink-faint);z-index:2;pointer-events:none;
+  }
+  .person:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(60,50,30,.28)}
+  .person:active{transform:scale(.985)}
+  .person .stripe{
+    position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:3px;
+  }
+  .couple .person .stripe{left:0}
+  .p-davy .stripe{background:var(--davy)}
+  .p-cummings .stripe{background:var(--cummings)}
+  .p-union .stripe{background:linear-gradient(var(--davy) 50%,var(--cummings) 50%)}
+  .p-name{
+    font-family:'Fraunces',serif;font-weight:500;font-size:1rem;
+    line-height:1.25;padding-left:10px;
+  }
+  .p-nick{font-style:italic;font-weight:400;color:var(--ink-soft)}
+  .p-dates{
+    font-size:12.5px;color:var(--ink-faint);padding-left:10px;margin-top:3px;
+    font-variant-numeric:tabular-nums;
+  }
+  .p-place{
+    font-size:11.5px;color:var(--ink-faint);padding-left:10px;margin-top:5px;
+    display:flex;align-items:center;gap:5px;
+  }
+  .p-place svg{flex:none;opacity:.55}
+  .badge{
+    display:inline-block;margin-left:10px;margin-top:8px;
+    font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+    padding:3px 9px;border-radius:999px;
+  }
+  .badge.davy{background:var(--davy-soft);color:var(--davy)}
+  .badge.cummings{background:var(--cummings-soft);color:var(--cummings)}
+  .badge.union{background:var(--union-soft);color:var(--union)}
+
+  .dimmed{opacity:.28;pointer-events:none}
+
+  /* connector between generations */
+  .down-link{
+    display:flex;justify-content:center;padding:4px 0 2px;
+  }
+  .down-link svg{opacity:.5}
+
+  .union-callout{
+    margin:6px 0 2px;padding:16px 18px;
+    background:var(--union-soft);
+    border-radius:var(--radius);
+    font-size:13.5px;color:var(--union);
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .union-callout b{font-weight:600}
+  .union-callout .ring{flex:none;margin-top:2px}
+
+  /* ---------- STORY ---------- */
+  .story-grid{
+    display:grid;grid-template-columns:2fr 1fr;gap:36px;margin-top:20px;
+  }
+  @media(max-width:768px){.story-grid{grid-template-columns:1fr;gap:24px}}
+  .story-grid p{color:var(--ink-soft);font-weight:300;font-size:.98rem;margin-bottom:16px;max-width:62ch}
+  .story-grid p b{color:var(--ink);font-weight:500}
+  .aside{
+    border-top:2px solid var(--ink);padding-top:16px;height:max-content;
+  }
+  .aside h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.05rem;margin-bottom:12px}
+  .aside ul{list-style:none}
+  .aside li{
+    font-size:13px;color:var(--ink-soft);padding:9px 0;border-bottom:1px solid var(--line);
+    display:flex;justify-content:space-between;gap:12px;
+  }
+  .aside li span:last-child{color:var(--ink-faint);text-align:right;flex:none}
+
+  /* ---------- SURNAMES ---------- */
+  .names-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:0;border-top:1px solid var(--line);margin-top:18px;
+  }
+  .name-cell{
+    padding:20px 18px 22px;border-bottom:1px solid var(--line);
+    border-right:1px solid var(--line);
+  }
+  .name-cell h4{font-family:'Fraunces',serif;font-weight:500;font-size:1.15rem}
+  .name-cell .orig{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin:4px 0 8px}
+  .name-cell p{font-size:13px;color:var(--ink-soft);font-weight:300}
+  .name-cell .gaelic{font-style:italic;color:var(--ink)}
+
+  /* ---------- DETAIL SHEET ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(34,31,26,.42);
+    opacity:0;pointer-events:none;transition:opacity .25s;z-index:80;
+    backdrop-filter:blur(2px);
+  }
+  .overlay.open{opacity:1;pointer-events:auto}
+  .sheet{
+    position:fixed;left:0;right:0;bottom:0;z-index:90;
+    background:var(--paper);
+    border-radius:22px 22px 0 0;
+    max-height:82dvh;overflow-y:auto;
+    transform:translateY(103%);
+    transition:transform .32s cubic-bezier(.16,1,.3,1);
+    box-shadow:0 -18px 50px -20px rgba(34,31,26,.35);
+    padding:14px 22px calc(30px + env(safe-area-inset-bottom));
+  }
+  .sheet.open{transform:translateY(0)}
+  .grab{width:40px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 18px}
+  .sheet .s-line{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+  .sheet .s-line.davy{color:var(--davy)}
+  .sheet .s-line.cummings{color:var(--cummings)}
+  .sheet .s-line.union{color:var(--union)}
+  .sheet h3{
+    font-family:'Fraunces',serif;font-weight:500;font-size:1.6rem;line-height:1.15;
+    max-width:20ch;
+  }
+  .sheet .s-nick{font-style:italic;color:var(--ink-soft);font-weight:400}
+  .sheet .s-dates{
+    font-family:'Fraunces',serif;font-style:italic;color:var(--ink-faint);
+    margin-top:6px;font-size:1rem;
+  }
+  .facts{margin-top:18px;border-top:1px solid var(--line)}
+  .fact{
+    display:grid;grid-template-columns:110px 1fr;gap:14px;
+    padding:11px 0;border-bottom:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .fact dt{color:var(--ink-faint);font-weight:500}
+  .fact dd{color:var(--ink)}
+  .s-notes{margin-top:16px;font-size:14px;color:var(--ink-soft);font-weight:300}
+  .s-notes p{margin-bottom:10px}
+  @media(min-width:720px){
+    .sheet{left:auto;right:0;top:0;bottom:0;max-height:none;width:430px;
+      border-radius:0;transform:translateX(103%);
+      padding-top:28px;
+    }
+    .sheet.open{transform:translateX(0)}
+    .grab{display:none}
+  }
+
+  footer{
+    margin-top:70px;padding:34px 0 46px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--ink-faint);
+  }
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  /* stagger load-in */
+  .person,.couple{animation:rise .5s cubic-bezier(.16,1,.3,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="index.html" class="back-link" aria-label="Back to home">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m0 0 7 7m-7-7 7-7"/></svg>
+      Back to Home
+    </a>
+    <div class="eyebrow">A Family Record · Compiled 2026</div>
+    <h1>The Cummings <em>&amp;</em> Davy Families</h1>
+    <p class="hero-sub">
+      Five generations across three countries — from the famine townlands of south County Sligo
+      and the old Comyn line of Scotland, through the Irish Catholic settlement at Goshentown
+      near Hendersonville, Tennessee, to the high-plains homesteads of Haxtun, Colorado, and home again.
+    </p>
+    <div class="hero-meta">
+      <span><b>34</b> recorded family members</span>
+      <span><b>c. 1800 – present</b></span>
+      <span><b>Sligo · Sumner Co. TN · Phillips Co. CO</b></span>
+    </div>
+
+    <div class="journey" aria-label="Migration journey">
+      <div class="leg">
+        <div class="yr">c. 1829</div>
+        <div class="pl">Ballintogher / Ballinafad, Co. Sligo, Ireland</div>
+        <div class="why">Birth of James Thomas Davy I in the townlands above Lough Arrow.</div>
+      </div>
+      <div class="leg">
+        <div class="yr">1845–52</div>
+        <div class="pl">The Great Famine</div>
+        <div class="why">Connacht devastated; the Davy family joins the famine-era emigration.</div>
+      </div>
+      <div class="leg">
+        <div class="yr">c. 1850s</div>
+        <div class="pl">Goshentown Rd, Sumner Co., Tennessee</div>
+        <div class="why">Irish Catholic families settle near Hendersonville along the L&amp;N rail corridor.</div>
+      </div>
+      <div class="leg">
+        <div class="yr">c. 1900</div>
+        <div class="pl">The two lines join</div>
+        <div class="why">Cyrus Alvin Cummings marries Annie Davy in Sumner County.</div>
+      </div>
+      <div class="leg">
+        <div class="yr">c. 1920</div>
+        <div class="pl">Haxtun, Colorado</div>
+        <div class="why">James Matthew &amp; Zelma homestead on the eastern plains; Ann Frances born there, 1921.</div>
+      </div>
+      <div class="leg">
+        <div class="yr">1930s →</div>
+        <div class="pl">Nashville / Nolensville, TN</div>
+        <div class="why">The family returns to Middle Tennessee, where the line continues today.</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ TREE ============ -->
+  <section id="tree">
+    <div class="sec-head">
+      <h2>The Family Tree</h2>
+      <p class="sec-note">Tap any name for their full record — dates, places, family, and research notes.</p>
+    </div>
+
+    <div class="filters" role="tablist" aria-label="Filter by family line">
+      <button class="fbtn" data-line="all" data-active="true">All lines</button>
+      <button class="fbtn" data-line="davy"><span class="dot"></span>Davy · Ireland</button>
+      <button class="fbtn" data-line="cummings"><span class="dot"></span>Cummings · Scotland → America</button>
+    </div>
+
+    <div id="treeRoot"></div>
+  </section>
+
+  <!-- ============ STORY ============ -->
+  <section id="story">
+    <div class="sec-head">
+      <h2>The Migration Story</h2>
+    </div>
+    <div class="story-grid">
+      <div>
+        <p><b>Out of Sligo.</b> The Davys came from the townlands around Ballintogher and Ballinafad
+        in south County Sligo — famine heartland. James Thomas Davy I was a teenager when the Great
+        Famine emptied Connacht; between the 1841 and 1851 censuses, Ireland lost over 1.6 million
+        people to death and emigration. Like so many, the Davys chose the boat.</p>
+
+        <p><b>Why Tennessee?</b> Irish famine immigrants followed the work inland — most often the
+        railroads. The Louisville &amp; Nashville line pushed through Sumner County in 1859, and an
+        Irish Catholic community had existed there since Hugh Rogan of Donegal built his stone
+        cottage "Rogana" around 1800. The Davys put down roots along Goshentown Road near
+        Hendersonville, a name still tied to the family in local records generations later.</p>
+
+        <p><b>An older American line.</b> The Cummings side tells a different story. The surname
+        descends from the medieval Comyn clan of Scotland — Norman lords broken by Robert the
+        Bruce in 1306. But this family's American chapter likely began generations before the
+        Davys arrived: the strongest record match places Malachi Cummings' birth in
+        <b>Clark County, Kentucky, 1802</b>, and his death in Gallatin, Tennessee — an American
+        frontier family, not recent immigrants.</p>
+
+        <p><b>The union.</b> Around the turn of the century, Cyrus Alvin Cummings married Annie
+        Davy, joining the frontier-American Cummings line to the Irish Catholic Davy line. Their
+        son James Matthew — "Rooster" — tried his luck homesteading at Haxtun on Colorado's
+        eastern plains, where daughter Ann Frances was born in 1921, before drought and hard
+        seasons brought the family home to Middle Tennessee for good.</p>
+      </div>
+      <div class="aside">
+        <h3>Research status</h3>
+        <ul>
+          <li><span>Goshentown Davy presence</span><span>Verified</span></li>
+          <li><span>Haxtun, CO birth (1921)</span><span>Verified</span></li>
+          <li><span>Malachi b. Clark Co., KY</span><span>Strong match</span></li>
+          <li><span>Sligo parish baptisms</span><span>Next step</span></li>
+          <li><span>Griffith's Valuation</span><span>Next step</span></li>
+          <li><span>Y-DNA Comyn test</span><span>Suggested</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SURNAMES ============ -->
+  <section id="names">
+    <div class="sec-head">
+      <h2>The Names We Carry</h2>
+      <p class="sec-note">Every surname in the tree, and where it began.</p>
+    </div>
+    <div class="names-grid">
+      <div class="name-cell">
+        <h4>Cummings</h4>
+        <div class="orig" style="color:var(--cummings)">Norman · Scottish</div>
+        <p>From <span class="gaelic">Comyn</span> — Clan Cumming, 13th-century Scotland's most
+        powerful family, named for Comines near Lille. Broken by Robert the Bruce, scattered, endured.</p>
+      </div>
+      <div class="name-cell">
+        <h4>Davy</h4>
+        <div class="orig" style="color:var(--davy)">Irish · Co. Sligo</div>
+        <p>A diminutive of David, long settled in Ireland. This family's branch: Catholic
+        farmers of the Ballintogher–Ballinafad townlands, south Sligo.</p>
+      </div>
+      <div class="name-cell">
+        <h4>McGarry</h4>
+        <div class="orig" style="color:var(--davy)">Irish · Connacht</div>
+        <p><span class="gaelic">Mag Fhearadhaigh</span> — "son of Fearadhach," meaning manly,
+        brave. Concentrated in east Connacht, the same country as the Davys.</p>
+      </div>
+      <div class="name-cell">
+        <h4>Mulloy</h4>
+        <div class="orig" style="color:var(--davy)">Irish · Uí Néill</div>
+        <p><span class="gaelic">Ó Maolmhuaidh</span> — "descendant of the proud chieftain."
+        A family of the southern Uí Néill, found through Offaly and east Connacht.</p>
+      </div>
+      <div class="name-cell">
+        <h4>Brookshire</h4>
+        <div class="orig" style="color:var(--cummings)">English · Colonial</div>
+        <p>"Dweller by the brook in the shire." In America since the colonial era —
+        Virginia and the Appalachian frontier before Tennessee.</p>
+      </div>
+      <div class="name-cell">
+        <h4>Moore</h4>
+        <div class="orig" style="color:var(--cummings)">English · Scots-Irish</div>
+        <p>Topographic — "by the moor" — or Irish <span class="gaelic">Ó Mórdha</span>,
+        "the stately one." In Middle Tennessee, most likely English or Scots-Irish stock.</p>
+      </div>
+      <div class="name-cell">
+        <h4>Pender</h4>
+        <div class="orig" style="color:var(--cummings)">Norman-Irish</div>
+        <p>A shortened Prendergast — <span class="gaelic">de Piondárgas</span> — Norman
+        knights turned Irish; or an English occupational name for a keeper of the pound.</p>
+      </div>
+      <div class="name-cell">
+        <h4>Grubbs</h4>
+        <div class="orig" style="color:var(--cummings)">English</div>
+        <p>An English surname of the American South, carried into the family by
+        Margaret Grubbs Cummings, b. 1937.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Compiled from the family board &amp; genealogical research, July 2026.</span>
+    <span>Davy line <span style="color:var(--davy)">■</span> · Cummings line <span style="color:var(--cummings)">■</span></span>
+  </div>
+</footer>
+
+<!-- ============ DETAIL SHEET ============ -->
+<div class="overlay" id="overlay"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Family member details">
+  <div class="grab"></div>
+  <div id="sheetContent"></div>
+</aside>
+
+<script>
+/* ================= DATA ================= */
+const PEOPLE = {
+  hughDavy:{n:"Hugh Davy",d:"c. 1800 – 1841",line:"davy",place:"Ireland",
+    facts:{Born:"c. 1800, Ireland (possibly Co. Sligo)",Died:"1841, Ireland",Spouse:"Margaret (Bustis / Burris) Davy",Children:"James Thomas Davy I"},
+    notes:["Patriarch of the Davy line. He died before the Great Famine began; his widow and son made the crossing without him.","His surname is well attested in Riverstown and Sligo Town in this period."]},
+  margaretBustis:{n:"Margaret Bustis Davy",d:"1805 – 1887",line:"davy",place:"Ireland",
+    facts:{Born:"1805, Ireland",Died:"1887",Spouse:"Hugh Davy",Note:"Maiden name rendered Bustis / Burris / Bustles on the board — possibly Burns or Eustace"},
+    notes:["She outlived her husband by 46 years, living long enough to see the family established in America.","Her true maiden name is a key research target in the Sligo parish registers."]},
+  thadyMcGarry:{n:"Thadeus McGarry",nick:"Thady",d:"c. 1800s",line:"davy",place:"Ireland / Scotland",
+    facts:{Spouse:"Margaret McGarry",Children:"Mary Ellen McGarry Davy",Surname:"Mag Fhearadhaigh — east Connacht"},
+    notes:["\u201CThady\u201D was an extremely common name in the Sligo–Roscommon country of this era.","The McGarry surname clusters in the very same region as the Davys — the families likely knew each other before America."]},
+  margaretMcGarry:{n:"Margaret McGarry",d:"c. 1800s",line:"davy",place:"Ireland / Scotland",
+    facts:{Spouse:"Thadeus \u201CThady\u201D McGarry",Children:"Mary Ellen McGarry Davy"},
+    notes:["Matriarch of the McGarry line; little else is recorded on the family board."]},
+  malachi:{n:"Malachi Cummings",d:"1802 – 1848*",line:"cummings",place:"Clark Co., KY → Gallatin, TN",
+    facts:{Born:"16 Feb 1802 — Clark County, Kentucky (record match)",Died:"Board: 1848 · Record: 2 Mar 1842, Gallatin, TN",Spouse:"Edith \u201CEdy\u201D Brookshire",Parents:"Possibly William Henry Comegys (Cummings) & Esther Patton"},
+    notes:["The board says \u201Cborn in England,\u201D but the strongest record match places his birth in Kentucky — meaning the Cummings were American frontier stock two generations earlier than family memory held.","The 1842 vs. 1848 death-date conflict needs a probate or land record to resolve.","\u201CComegys\u201D is a period spelling variant of the Comyn/Cummings surname cluster."]},
+  edith:{n:"Edith Brookshire Cummings",nick:"Edy",d:"1803 – 1870",line:"cummings",place:"Tennessee",
+    facts:{Born:"1803",Died:"1870",Spouse:"Malachi Cummings",Surname:"English — colonial American roots"},
+    notes:["The Brookshire name signals old English-descended colonial family — Virginia and the Appalachian frontier before Tennessee.","She survived Malachi by nearly three decades and the Civil War besides."]},
+  jamesDavyI:{n:"James Thomas Davy I",d:"1829 – 1913",line:"davy",place:"Ballintogher / Ballinafad, Co. Sligo → Hendersonville, TN",
+    facts:{Born:"1829 — south Co. Sligo, Ireland",Died:"1913 — Sumner County, TN",Spouse:"Mary Ellen McGarry",Children:"Hugh, Josephine, James II, Willie, Mollie, Kate, Margaret, Annie",Settled:"Goshentown Rd, near Hendersonville"},
+    notes:["The immigrant. A teenager during the Great Famine, he crossed the Atlantic and followed the work inland — almost certainly the railroad — to Sumner County.","He lived to 84, long enough to see his daughter Annie marry into the Cummings family.","His baptism should be findable in the Riverstown-area Catholic parish registers, Diocese of Elphin."]},
+  maryEllenMcGarry:{n:"Mary Ellen McGarry Davy",d:"1830 – 1900",line:"davy",place:"Ireland → Hendersonville, TN",
+    facts:{Born:"1830",Died:"c. 1900, Sumner County, TN",Parents:"Thadeus \u201CThady\u201D & Margaret McGarry",Spouse:"James Thomas Davy I"},
+    notes:["Mother of at least eight children raised on the Goshentown farm.","Her Connacht Gaelic surname is the strongest single clue tying the family's origins to the Sligo–Roscommon country."]},
+  williamMattison:{n:"William Mattison Cummings",nick:"Matthew",d:"1831 – 1913",line:"cummings",place:"Goodlettsville / Gallatin / Nashville, TN",
+    facts:{Born:"1831",Died:"1913",Spouse:"Sarah H. Moore",Children:"Cyrus Alvin Cummings",Era:"Prime military age during the Civil War"},
+    notes:["He lived his whole life in the contested Sumner–Davidson corridor, occupied by Union forces from 1862.","Two small Cummings family cemeteries in Goodlettsville (FindAGrave IDs 2151059 & 2324929) are the likeliest burial candidates for this generation.","Civil War service records at TSLA are the next research step for him."]},
+  sarahMoore:{n:"Sarah H. Moore Cummings",d:"1836 – 1924",line:"cummings",place:"Nashville / Goodlettsville, TN",
+    facts:{Born:"1836",Died:"1924",Spouse:"William Mattison \u201CMatthew\u201D Cummings"},
+    notes:["She lived 88 years — from the age of Jackson to the age of radio.","Moore may be English, Scots-Irish, or Irish Ó Mórdha in origin."]},
+  hughDavy2:{n:"Hugh Davy",d:"1852 – 1932",line:"davy",place:"Sumner County, TN",
+    facts:{Born:"1852",Died:"1932",Parents:"James Thomas Davy I & Mary Ellen McGarry"},
+    notes:["Named for his grandfather in the old Irish naming pattern — eldest son for the father's father.","One of the unmarked graves in the family cemetery plot may be his."]},
+  josephine:{n:"Josephine Davy",d:"1858 – 1909",line:"davy",place:"Sumner County, TN",
+    facts:{Born:"1858",Died:"1909",Parents:"James Thomas Davy I & Mary Ellen McGarry"},
+    notes:["Recorded on the family board's cemetery diagram among the Davy plots."]},
+  jamesDavyII:{n:"James Thomas Davy II",d:"1863 – 1928",line:"davy",place:"Sumner County, TN",
+    facts:{Born:"1863",Died:"1928",Spouse:"Margaret Katherine Philomena Mulloy",Parents:"James Thomas Davy I & Mary Ellen McGarry"},
+    notes:["Carried his father's full name into the second American generation.","His wife's Mulloy surname — Ó Maolmhuaidh — kept the marriage within the Irish Catholic community."]},
+  margaretMulloy:{n:"Margaret Katherine Philomena Mulloy Davy",d:"1860 – 1936",line:"davy",place:"Sumner County, TN",
+    facts:{Born:"1860",Died:"1936",Spouse:"James Thomas Davy II"},
+    notes:["Her triple saint's name — Katherine Philomena — is classic Irish Catholic baptismal naming of the era."]},
+  willie:{n:"William J. Davy",nick:"Willie",d:"1865 – 1943",line:"davy",place:"Sumner County, TN",
+    facts:{Born:"1865",Died:"1943",Parents:"James Thomas Davy I & Mary Ellen McGarry"},
+    notes:["Appears in the family cemetery plot diagram; several Davy graves are unmarked."]},
+  mollie:{n:"Mary Ellen Davy",nick:"Mollie",d:"1868 – 1959",line:"davy",place:"Sumner County, TN",
+    facts:{Born:"1868",Died:"1959",Parents:"James Thomas Davy I & Mary Ellen McGarry",Note:"Also rendered \u201CMamie\u201D on the board"},
+    notes:["Named for her mother; she lived into the age of television, ninety years after her father left Sligo."]},
+  kate:{n:"Kate P. Davy",d:"—",line:"davy",place:"Sumner County, TN",
+    facts:{Parents:"James Thomas Davy I & Mary Ellen McGarry"},
+    notes:["Dates not recorded on the board — a target for census research."]},
+  margaretDavy3:{n:"Margaret Davy",d:"—",line:"davy",place:"Sumner County, TN",
+    facts:{Parents:"James Thomas Davy I & Mary Ellen McGarry"},
+    notes:["Dates not recorded on the board — likely findable in the 1880 census for Sumner County."]},
+  cyrus:{n:"Cyrus Alvin Cummings",d:"1874 – 1943",line:"union",place:"Hendersonville, TN — Goshentown Rd",
+    facts:{Born:"1874",Died:"1943",Spouse:"Annie Davy",Parents:"William Mattison Cummings & Sarah H. Moore",Children:"James Matthew, Robert \u201CBob\u201D, Joseph \u201CJoe\u201D"},
+    notes:["His marriage to Annie Davy around 1900 is the hinge of this whole tree — the frontier-American Cummings line joining the Irish Catholic Davy line.","They made their home in the Goshentown Road community where Annie was raised."]},
+  annie:{n:"Annie Davy Cummings",d:"1872 – 1936",line:"union",place:"Hendersonville, TN — Goshentown Rd",
+    facts:{Born:"1872, Sumner County, TN",Died:"1936",Spouse:"Cyrus Alvin Cummings",Parents:"James Thomas Davy I & Mary Ellen McGarry"},
+    notes:["First-generation American daughter of the Sligo immigrants — and the bridge between the two families.","Her death certificate (TN, 1936) is a high-value research document: it should name both her Irish-born parents."]},
+  jamesMatthew:{n:"James Matthew Cummings",nick:"Matt · Jimmy · Rooster",d:"1899 – 1988",line:"cummings",place:"Hendersonville, TN → Haxtun, CO → Nolensville, TN",
+    facts:{Born:"1899",Died:"1988",Spouse:"Zelma Loretta Pender",Children:"Ann Frances, James Melvin, Theresa Catherine, Mary Lois, Anthony Duane",Adventure:"Homesteaded at Haxtun, Colorado, c. 1920"},
+    notes:["\u201CRooster\u201D took his young family west to the Colorado high plains during the last homesteading wave — Haxtun incorporated in 1909 and boomed through the 1910s–20s.","Daughter Ann Frances was born there in November 1921 (verified by obituary).","Drought and hard plains seasons — the prelude to the Dust Bowl — likely drove the return to Tennessee."]},
+  zelma:{n:"Zelma Loretta Pender Cummings",d:"1903 – 1990",line:"cummings",place:"Tennessee → Haxtun, CO → Tennessee",
+    facts:{Born:"1903",Died:"1990",Spouse:"James Matthew Cummings",Surname:"Pender — Norman-Irish (Prendergast) or English"},
+    notes:["She raised five children between two states and one very unforgiving prairie.","She lived to 1990 — a living link to the homestead era into the modern day."]},
+  bob:{n:"Robert Cummings",nick:"Bob",d:"—",line:"cummings",place:"Tennessee",
+    facts:{Parents:"Cyrus Alvin Cummings & Annie Davy"},
+    notes:["Dates not recorded on the board."]},
+  joe:{n:"Joseph Cummings",nick:"Joe",d:"—",line:"cummings",place:"Tennessee",
+    facts:{Parents:"Cyrus Alvin Cummings & Annie Davy"},
+    notes:["Dates not recorded on the board."]},
+  annFrances:{n:"Ann Frances Cummings Mannion",d:"1921 – 2011",line:"cummings",place:"b. Haxtun, CO · d. Nashville, TN",
+    facts:{Born:"24 Nov 1921 — Haxtun, Colorado (verified)",Died:"14 Mar 2011 — Nashville, TN",Spouse:"Thomas A. Mannion",Parents:"James Matthew Cummings & Zelma Pender"},
+    notes:["Her verified Haxtun birth is the record that anchors the entire Colorado chapter of the family story.","She returned with the family to Nashville, where she lived out her ninety years."]},
+  buddy:{n:"James Melvin Cummings",nick:"Buddy",d:"1925 – 1944",line:"cummings",place:"Tennessee",
+    facts:{Born:"1925",Died:"1944 — age 19",Parents:"James Matthew Cummings & Zelma Pender"},
+    notes:["He died at nineteen in 1944, at the height of the Second World War.","Whether he died in service is unknown — WWII enlistment and casualty records are a priority research step. If so, he is the family's war dead."]},
+  theresa:{n:"Theresa Catherine Cummings",nick:"Cripps · Williams · Freudeman",d:"1929 – 2016",line:"cummings",place:"Tennessee",
+    facts:{Born:"1929",Died:"2016",Parents:"James Matthew Cummings & Zelma Pender"},
+    notes:["Married three times, carrying the surnames Cripps, Williams, and Freudeman.","No public obituary was located — Tennessee vital records would confirm details."]},
+  maryLois:{n:"Mary Lois Cummings",d:"—",line:"cummings",place:"Tennessee",
+    facts:{Parents:"James Matthew Cummings & Zelma Pender"},
+    notes:["Dates not recorded on the board."]},
+  anthony:{n:"Anthony Duane Cummings",d:"1936 – 2007",line:"cummings",place:"Tennessee",
+    facts:{Born:"1936",Died:"2007",Spouse:"Margaret Grubbs Cummings (b. 1937)",Parents:"James Matthew Cummings & Zelma Pender"},
+    notes:["Youngest recorded child of Rooster and Zelma; the line that continues to the present generation.","Absent from the Sumner County 2007 obituary index — he likely died elsewhere in Tennessee; death certificate would confirm."]},
+  margaretGrubbs:{n:"Margaret Grubbs Cummings",d:"b. 1937",line:"cummings",place:"Tennessee",
+    facts:{Born:"1937",Spouse:"Anthony Duane Cummings"},
+    notes:["Living matriarch of the modern generation at the time the family board was made."]}
+};
+
+const GENERATIONS = [
+  {num:"I",title:"The Old Country",sub:"Born around 1800 — Ireland, Scotland, and the American frontier",
+   rows:[
+     {type:"couple",a:"hughDavy",b:"margaretBustis"},
+     {type:"couple",a:"thadyMcGarry",b:"margaretMcGarry"},
+     {type:"couple",a:"malachi",b:"edith"}
+   ]},
+  {num:"II",title:"The Crossing",sub:"The immigrant generation — and the Tennessee-born line they would one day join",
+   rows:[
+     {type:"couple",a:"jamesDavyI",b:"maryEllenMcGarry"},
+     {type:"couple",a:"williamMattison",b:"sarahMoore"}
+   ]},
+  {num:"III",title:"First Americans",sub:"The Goshentown generation — eight Davy children raised in Sumner County",
+   rows:[
+     {type:"single",a:"hughDavy2"},{type:"single",a:"josephine"},
+     {type:"couple",a:"jamesDavyII",b:"margaretMulloy"},
+     {type:"single",a:"willie"},{type:"single",a:"mollie"},
+     {type:"single",a:"kate"},{type:"single",a:"margaretDavy3"}
+   ]},
+  {num:"IV",title:"The Union",sub:"Where the Davy and Cummings lines become one family",union:true,
+   rows:[
+     {type:"couple",a:"cyrus",b:"annie"}
+   ]},
+  {num:"V",title:"Westward & Home",sub:"The Haxtun homestead generation and their children",
+   rows:[
+     {type:"couple",a:"jamesMatthew",b:"zelma"},
+     {type:"single",a:"bob"},{type:"single",a:"joe"}
+   ]},
+  {num:"VI",title:"The Modern Line",sub:"Born 1921–1937 — Colorado plains to Nashville",
+   rows:[
+     {type:"single",a:"annFrances"},{type:"single",a:"buddy"},
+     {type:"single",a:"theresa"},{type:"single",a:"maryLois"},
+     {type:"couple",a:"anthony",b:"margaretGrubbs"}
+   ]}
+];
+
+/* ================= RENDER ================= */
+const pin = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
+const arrow = `<svg width="16" height="26" viewBox="0 0 16 26" fill="none" stroke="#bcb3a3" stroke-width="1.5"><path d="M8 0v20m0 0-5-5m5 5 5-5"/></svg>`;
+const ring = `<svg class="ring" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="14" r="6"/><circle cx="15" cy="14" r="6"/><path d="M9 8l3-4 3 4"/></svg>`;
+
+function personHTML(id, delay){
+  const p = PEOPLE[id];
+  const lineClass = p.line==="union" ? "p-union" : (p.line==="davy" ? "p-davy" : "p-cummings");
+  const badge = p.line==="union"
+    ? `<span class="badge union">Davy ⇄ Cummings</span>`
+    : `<span class="badge ${p.line}">${p.line==="davy"?"Davy line":"Cummings line"}</span>`;
+  return `<div class="person ${lineClass}" data-id="${id}" data-line="${p.line}" style="animation-delay:${delay}ms" role="button" tabindex="0" aria-label="View details for ${p.n}">
+    <span class="stripe"></span>
+    <div class="p-name">${p.n}${p.nick?` <span class="p-nick">&ldquo;${p.nick.split(" · ")[0]}&rdquo;</span>`:""}</div>
+    <div class="p-dates">${p.d}</div>
+    <div class="p-place">${pin}<span>${p.place}</span></div>
+    ${badge}
+  </div>`;
+}
+
+function render(){
+  const root = document.getElementById("treeRoot");
+  let html = "";
+  let delay = 0;
+  GENERATIONS.forEach((g,gi)=>{
+    html += `<div class="gen">
+      <div class="gen-label"><span class="gen-num">Generation ${g.num}</span><span class="gen-title">${g.title}</span></div>
+      <div class="gen-sub">${g.sub}</div>`;
+    if(g.union){
+      html += `<div class="union-callout">${ring}<div><b>The hinge of the tree.</b> Cyrus Alvin Cummings married Annie Davy in Sumner County around 1900 — every generation below descends from both lines.</div></div>`;
+    }
+    html += `<div class="row">`;
+    g.rows.forEach(r=>{
+      delay += 40;
+      if(r.type==="couple"){
+        html += `<div class="couple" style="animation-delay:${delay}ms">${personHTML(r.a,0)}${personHTML(r.b,0)}</div>`;
+      }else{
+        html += personHTML(r.a, delay);
+      }
+    });
+    html += `</div></div>`;
+    if(gi < GENERATIONS.length-1){
+      html += `<div class="down-link">${arrow}</div>`;
+    }
+  });
+  root.innerHTML = html;
+}
+render();
+
+/* ================= FILTER ================= */
+document.querySelectorAll(".fbtn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".fbtn").forEach(b=>b.dataset.active="false");
+    btn.dataset.active="true";
+    const line = btn.dataset.line;
+    document.querySelectorAll(".person").forEach(el=>{
+      const pl = el.dataset.line;
+      const show = line==="all" || pl===line || pl==="union";
+      el.classList.toggle("dimmed", !show);
+    });
+  });
+});
+
+/* ================= DETAIL SHEET ================= */
+const overlay = document.getElementById("overlay");
+const sheet = document.getElementById("sheet");
+const sheetContent = document.getElementById("sheetContent");
+
+function openSheet(id){
+  const p = PEOPLE[id];
+  const lineLabel = p.line==="union" ? "Davy ⇄ Cummings — the union" : (p.line==="davy" ? "Davy line · Ireland" : "Cummings line · Scotland → America");
+  let facts = "";
+  for(const [k,v] of Object.entries(p.facts||{})){
+    facts += `<div class="fact"><dt>${k}</dt><dd>${v}</dd></div>`;
+  }
+  const notes = (p.notes||[]).map(t=>`<p>${t}</p>`).join("");
+  sheetContent.innerHTML = `
+    <div class="s-line ${p.line}">${lineLabel}</div>
+    <h3>${p.n}</h3>
+    ${p.nick?`<div class="s-nick">known as &ldquo;${p.nick}&rdquo;</div>`:""}
+    <div class="s-dates">${p.d}</div>
+    <dl class="facts">${facts}</dl>
+    <div class="s-notes">${notes}</div>`;
+  overlay.classList.add("open");
+  sheet.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeSheet(){
+  overlay.classList.remove("open");
+  sheet.classList.remove("open");
+  document.body.style.overflow = "";
+}
+overlay.addEventListener("click", closeSheet);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeSheet(); });
+document.getElementById("treeRoot").addEventListener("click", e=>{
+  const card = e.target.closest(".person");
+  if(card && !card.classList.contains("dimmed")) openSheet(card.dataset.id);
+});
+document.getElementById("treeRoot").addEventListener("keydown", e=>{
+  if(e.key==="Enter" || e.key===" "){
+    const card = e.target.closest(".person");
+    if(card){ e.preventDefault(); openSheet(card.dataset.id); }
+  }
+});
+
+/* swipe-down to close on mobile */
+let startY = null;
+sheet.addEventListener("touchstart", e=>{ if(sheet.scrollTop<=0) startY = e.touches[0].clientY; },{passive:true});
+sheet.addEventListener("touchmove", e=>{
+  if(startY!==null && e.touches[0].clientY - startY > 70){ closeSheet(); startY=null; }
+},{passive:true});
+sheet.addEventListener("touchend", ()=>{ startY=null; });
+</script>
+</body>
+</html>
