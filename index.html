@@ -1,657 +1,695 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Davy & Cummings Family Heritage Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #0b0f19;
-            color: #f1f5f9;
-        }
-       .serif-title {
-            font-family: 'Cinzel', serif;
-        }
-       .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-       .custom-scrollbar::-webkit-scrollbar-track {
-            background: #111827;
-        }
-       .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 3px;
-        }
-       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
-       .davy-node {
-            border-left: 4px solid #3b82f6;
-            background: rgba(30, 41, 59, 0.7);
-        }
-       .cummings-node {
-            border-left: 4px solid #ef4444;
-            background: rgba(30, 41, 59, 0.7);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Davy &amp; Cummings — Heritage Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f7f4ef;
+    --paper-deep:#efe9e0;
+    --ink:#221f1a;
+    --ink-soft:#5c564c;
+    --ink-faint:#8a8377;
+    --line:#ddd5c8;
+    --davy:#2f5d46;        /* muted Irish green */
+    --davy-soft:#e3ece6;
+    --cummings:#8a4b2f;    /* muted clay */
+    --cummings-soft:#f0e4dc;
+    --union:#6b5d3f;
+    --union-soft:#ece5d4;
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Outfit',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+  /* ---------- BACK LINK & PILL BUTTONS ---------- */
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Outfit',sans-serif;
+    font-size:13px;font-weight:500;letter-spacing:.02em;
+    color:var(--ink-soft);text-decoration:none;
+    padding:8px 16px;border-radius:999px;
+    border:1px solid var(--line);background:#fffdf9;
+    cursor:pointer;
+    transition:transform .15s cubic-bezier(.16,1,.3,1),background .2s,color .2s,border-color .2s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .pill:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .pill:active{transform:scale(.96)}
+  .pill[data-active="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .pill svg{flex:none}
+
+  /* ---------- HEADER ---------- */
+  header{
+    padding:40px 0 32px;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--davy);font-weight:600;margin-bottom:18px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .eyebrow::after{content:"";height:1px;width:56px;background:var(--davy);opacity:.4}
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:clamp(1.9rem,5.5vw,3rem);
+    line-height:1.08;
+    letter-spacing:-.015em;
+    max-width:18ch;
+  }
+  h1 em{font-style:italic;font-weight:400;color:var(--cummings)}
+  .hero-sub{
+    margin-top:14px;max-width:58ch;color:var(--ink-soft);
+    font-size:clamp(.95rem,2.4vw,1.02rem);font-weight:300;
+  }
+
+  /* ---------- TAB NAV ---------- */
+  .tabs{
+    position:sticky;top:0;z-index:30;
+    background:linear-gradient(var(--paper) 82%,rgba(247,244,239,0));
+    padding:14px 0 18px;
+    display:flex;gap:8px;flex-wrap:wrap;
+  }
+
+  /* ---------- SECTION CHROME ---------- */
+  section{padding:34px 0 8px}
+  .sec-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    gap:16px;flex-wrap:wrap;margin-bottom:6px;
+  }
+  h2{
+    font-family:'Fraunces',serif;font-weight:500;
+    font-size:clamp(1.4rem,4vw,1.9rem);letter-spacing:-.01em;
+  }
+  .sec-note{font-size:13px;color:var(--ink-faint);max-width:46ch}
+  .hidden{display:none !important}
+
+  /* ---------- LEGEND ---------- */
+  .legend{display:flex;gap:18px;font-size:12.5px;color:var(--ink-soft);margin:10px 0 18px;flex-wrap:wrap}
+  .legend span{display:flex;align-items:center;gap:7px}
+  .legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .legend .l-davy{background:var(--davy)}
+  .legend .l-cummings{background:var(--cummings)}
+
+  /* ---------- TREE ---------- */
+  .gen{margin-bottom:8px;padding:24px 0 18px;border-top:1px solid var(--line)}
+  .gen:first-of-type{border-top:none;padding-top:8px}
+  .gen-label{display:flex;align-items:baseline;gap:14px;margin-bottom:16px}
+  .gen-num{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:1.02rem;color:var(--ink-faint)}
+  .gen-title{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+
+  .row{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:12px;
+  }
+  @media(max-width:560px){.row{grid-template-columns:1fr 1fr}}
+  .person{
+    padding:14px 16px 13px;
+    background:#fffdf9;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    cursor:pointer;position:relative;
+    transition:transform .18s cubic-bezier(.16,1,.3,1),box-shadow .18s;
+    -webkit-tap-highlight-color:transparent;
+    animation:rise .5s cubic-bezier(.16,1,.3,1) both;
+  }
+  .person:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(60,50,30,.28)}
+  .person:active{transform:scale(.985)}
+  .person .stripe{position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:3px}
+  .p-davy .stripe{background:var(--davy)}
+  .p-cummings .stripe{background:var(--cummings)}
+  .p-union .stripe{background:linear-gradient(var(--davy) 50%,var(--cummings) 50%)}
+  .p-name{font-family:'Fraunces',serif;font-weight:500;font-size:1rem;line-height:1.25;padding-left:10px}
+  .p-nick{font-style:italic;font-weight:400;color:var(--ink-soft)}
+  .p-dates{font-size:12.5px;color:var(--ink-faint);padding-left:10px;margin-top:3px;font-variant-numeric:tabular-nums}
+  .p-place{font-size:11.5px;color:var(--ink-faint);padding-left:10px;margin-top:5px;display:flex;align-items:center;gap:5px}
+  .p-place svg{flex:none;opacity:.55}
+  .badge{
+    display:inline-block;margin-left:10px;margin-top:8px;
+    font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+    padding:3px 9px;border-radius:999px;
+  }
+  .badge.davy{background:var(--davy-soft);color:var(--davy)}
+  .badge.cummings{background:var(--cummings-soft);color:var(--cummings)}
+  .badge.union{background:var(--union-soft);color:var(--union)}
+  .badge.war{background:#efdcda;color:#7a3a30}
+
+  .union-callout{
+    margin:6px 0 14px;padding:16px 18px;
+    background:var(--union-soft);
+    border-radius:var(--radius);
+    font-size:13.5px;color:var(--union);
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .union-callout b{font-weight:600}
+  .union-callout svg{flex:none;margin-top:2px}
+
+  .down-link{display:flex;justify-content:center;padding:4px 0 2px}
+  .down-link svg{opacity:.5}
+
+  /* ---------- CEMETERY ---------- */
+  .plot-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+    gap:12px;margin-top:16px;
+  }
+  @media(max-width:560px){.plot-grid{grid-template-columns:1fr 1fr}}
+  .plot{
+    padding:14px 16px;background:#fffdf9;
+    border:1px solid var(--line);border-radius:var(--radius);
+    cursor:pointer;position:relative;
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+    transition:transform .18s cubic-bezier(.16,1,.3,1),box-shadow .18s,border-color .2s,background .2s;
+    -webkit-tap-highlight-color:transparent;
+    animation:rise .5s cubic-bezier(.16,1,.3,1) both;
+  }
+  .plot:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(60,50,30,.28)}
+  .plot:active{transform:scale(.985)}
+  .plot.active{border-color:var(--davy);background:var(--davy-soft)}
+  .plot .num{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--davy)}
+  .plot .who{font-family:'Fraunces',serif;font-weight:500;font-size:.98rem;line-height:1.25;margin-top:2px}
+  .plot.empty{cursor:default;opacity:.55;border-style:dashed;background:transparent}
+  .plot.empty .num{color:var(--ink-faint)}
+  .plot.empty .who{color:var(--ink-faint)}
+  .plot svg{flex:none;color:var(--ink-faint);opacity:.6}
+  .cem-foot{font-size:12px;color:var(--ink-faint);margin-top:16px}
+
+  /* ---------- MIGRATION ---------- */
+  .journey{
+    display:flex;align-items:stretch;gap:0;
+    margin:18px 0 0;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding-bottom:6px;
+  }
+  .journey::-webkit-scrollbar{display:none}
+  .leg{
+    flex:1 0 auto;min-width:200px;max-width:280px;
+    padding:16px 18px 14px;
+    border-left:1px solid var(--line);
+  }
+  .leg:first-child{border-left:none;padding-left:0}
+  .leg .step{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--davy)}
+  .leg.c .step{color:var(--cummings)}
+  .leg .yr{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:500;margin-top:4px}
+  .leg .pl{font-size:13px;color:var(--ink-soft);margin-top:2px}
+  .leg .why{font-size:12px;color:var(--ink-faint);margin-top:8px;max-width:26ch;line-height:1.5}
+
+  /* ---------- DETAIL SHEET ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(34,31,26,.42);
+    opacity:0;pointer-events:none;transition:opacity .25s;z-index:80;
+    backdrop-filter:blur(2px);
+  }
+  .overlay.open{opacity:1;pointer-events:auto}
+  .sheet{
+    position:fixed;left:0;right:0;bottom:0;z-index:90;
+    background:var(--paper);
+    border-radius:22px 22px 0 0;
+    max-height:82dvh;overflow-y:auto;
+    transform:translateY(103%);
+    transition:transform .32s cubic-bezier(.16,1,.3,1);
+    box-shadow:0 -18px 50px -20px rgba(34,31,26,.35);
+    padding:14px 22px calc(30px + env(safe-area-inset-bottom));
+  }
+  .sheet.open{transform:translateY(0)}
+  .grab{width:40px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 18px}
+  .s-line{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+  .s-line.davy{color:var(--davy)}
+  .s-line.cummings{color:var(--cummings)}
+  .sheet h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.6rem;line-height:1.15;max-width:20ch}
+  .s-dates{font-family:'Fraunces',serif;font-style:italic;color:var(--ink-faint);margin-top:6px;font-size:1rem}
+  .facts{margin-top:18px;border-top:1px solid var(--line)}
+  .fact{
+    display:grid;grid-template-columns:110px 1fr;gap:14px;
+    padding:11px 0;border-bottom:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .fact dt{color:var(--ink-faint);font-weight:500}
+  .fact dd{color:var(--ink)}
+  .s-notes{margin-top:16px;font-size:14px;color:var(--ink-soft);font-weight:300}
+  .s-status{
+    margin-top:20px;padding-top:14px;border-top:1px solid var(--line);
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--ink-faint);
+    display:flex;align-items:center;gap:8px;
+  }
+  .s-status .dot{width:8px;height:8px;border-radius:50%;background:var(--davy)}
+  @media(min-width:720px){
+    .sheet{left:auto;right:0;top:0;bottom:0;max-height:none;width:430px;
+      border-radius:0;transform:translateX(103%);padding-top:28px}
+    .sheet.open{transform:translateX(0)}
+    .grab{display:none}
+  }
+
+  footer{
+    margin-top:60px;padding:30px 0 44px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--ink-faint);
+  }
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+</style>
 </head>
-<body class="min-h-screen flex flex-col overflow-x-hidden">
+<body>
 
-    <header class="border-b border-gray-800 bg-gray-950/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-900/30">
-                <i class="fa-solid fa-crown text-gray-950 text-xl"></i>
-            </div>
-            
-            <div>
-                <h1 class="serif-title text-xl font-bold tracking-wider text-amber-500">DAVY & CUMMINGS</h1>
-                <p class="text-xs text-gray-400 font-medium tracking-widest uppercase">Family Heritage & Lineage Dashboard</p>
-            </div>
+<header>
+  <div class="wrap">
+
+    <div class="eyebrow">Heritage &amp; Lineage Dashboard</div>
+    <h1>Davy <em>&amp;</em> Cummings</h1>
+    <p class="hero-sub">
+      The interactive tree, the Smathers Cemetery plat map, and the migration path —
+      Ireland and colonial Virginia to Sumner County, Tennessee, and the Colorado plains.
+    </p>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" aria-label="Dashboard views">
+    <button class="pill" id="tab-tree" data-active="true" onclick="switchTab('tree')">Interactive Tree</button>
+    <button class="pill" id="tab-cemetery" onclick="switchTab('cemetery')">Cemetery Plat Map</button>
+    <button class="pill" id="tab-migration" onclick="switchTab('migration')">Migration Path</button>
+    <a class="pill" href="deeperdive.html">Deeper Dive
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-7-7m7 7-7 7"/></svg>
+    </a>
+  </nav>
+</div>
+
+<main class="wrap">
+
+  <!-- ============ TREE VIEW ============ -->
+  <section id="view-tree">
+    <div class="sec-head">
+      <h2>Generation Tree</h2>
+      <p class="sec-note">Tap any name for their full record — dates, places, family, and historical context.</p>
+    </div>
+    <div class="legend">
+      <span><i class="l-davy"></i>Davy line · Ireland</span>
+      <span><i class="l-cummings"></i>Cummings line · Virginia roots</span>
+    </div>
+
+    <div class="gen">
+      <div class="gen-label"><span class="gen-num">Generation I</span><span class="gen-title">Ireland &amp; the Virginia Colony</span></div>
+      <div class="row">
+        <div class="person p-davy" onclick="selectPerson('hugh_davy_i')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Hugh Davy I</div>
+          <div class="p-dates">1800 – 1886</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Tipperary, Ireland</span></div>
+          <span class="badge davy">Davy line</span>
         </div>
-        
-        <nav class="flex bg-gray-900/80 p-1 rounded-xl border border-gray-800">
-            <button onclick="switchTab('tree')" id="tab-tree" class="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-amber-600 text-gray-950 shadow-md">
-                <i class="fa-solid fa-sitemap mr-2"></i>Interactive Tree
-            </button>
-            <button onclick="switchTab('cemetery')" id="tab-cemetery" class="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
-                <i class="fa-solid fa-tombstone-blank mr-2"></i>Cemetery Plat Map
-            </button>
-            <button onclick="switchTab('migration')" id="tab-migration" class="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
-                <i class="fa-solid fa-route mr-2"></i>Migration Path
-            </button>
-            <button onclick="switchTab('migration')" id="tab-migration" class="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
-                <a href="deeperdive.html">Deeper Dive ></a>
-            </button>
-        </nav>
-    </header>
-
-    <main class="flex-1 grid grid-cols-1 xl:grid-cols-4 gap-6 p-6 overflow-hidden">
-        
-        <div class="xl:col-span-3 flex flex-col bg-gray-950/40 border border-gray-800/80 rounded-2xl p-6 relative overflow-hidden min-h-[600px] shadow-2xl">
-            
-            <div id="view-tree" class="flex-1 flex flex-col justify-between overflow-auto custom-scrollbar">
-                <div class="mb-4 flex justify-between items-center">
-                    <h2 class="text-lg font-bold text-gray-200 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> Generation Tree
-                    </h2>
-                    <div class="flex gap-4 text-xs font-semibold">
-                        <span class="flex items-center gap-1.5 text-blue-400"><span class="w-3 h-3 bg-blue-600/30 border border-blue-500 rounded"></span> Davy Line</span>
-                        <span class="flex items-center gap-1.5 text-red-400"><span class="w-3 h-3 bg-red-600/30 border border-red-500 rounded"></span> Cummings Line</span>
-                    </div>
-                </div>
-
-                <div class="flex flex-col gap-12 py-6 min-w-[900px]">
-                    <div class="grid grid-cols-4 gap-4 border-b border-gray-900 pb-6">
-                        <div class="text-center">
-                            <span class="text-[10px] text-amber-500 uppercase font-bold tracking-wider">Ireland Branches</span>
-                            <div class="mt-2 flex flex-col items-center gap-2">
-                                <div onclick="selectPerson('hugh_davy_i')" class="davy-node w-52 p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg">
-                                    <h4 class="font-bold text-sm">Hugh Davy I</h4>
-                                    <p class="text-xs text-gray-400">1800 - 1886</p>
-                                    <span class="text-[9px] bg-blue-900/40 text-blue-300 px-1.5 py-0.5 rounded mt-1 inline-block">Ireland at this time</span>
-                                </div>
-                                <div onclick="selectPerson('thady_mcgarry')" class="davy-node w-52 p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg">
-                                    <h4 class="font-bold text-sm">Thadeus McGarry</h4>
-                                    <p class="text-xs text-gray-400">1813 - 1800</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center col-span-3">
-                            <span class="text-[10px] text-amber-500 uppercase font-bold tracking-wider">Virginia Roots</span>
-                            <div class="mt-2 flex justify-center gap-4">
-                                <div onclick="selectPerson('malachi_cummings_sr')" class="cummings-node text-left w-64 p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg">
-                                    <h4 class="font-bold text-sm">Malachi Cummings Sr.</h4>
-                                    <p class="text-xs text-gray-400">c. 1695 - 1769</p>
-                                    <span class="text-[9px] bg-red-900/40 text-red-300 px-1.5 py-0.5 rounded mt-1 inline-block">Fauquier, VA Colony</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-4 gap-4 border-b border-gray-900 pb-6">
-                        <div class="flex flex-col items-center justify-center gap-2">
-                            <div onclick="selectPerson('james_thomas_davy_i')" class="davy-node w-52 p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg">
-                                <h4 class="font-bold text-sm">James Thomas Davy I</h4>
-                                <p class="text-xs text-gray-400">1829 - 1913</p>
-                                <span class="text-[9px] bg-indigo-900/40 text-indigo-300 px-1.5 py-0.5 rounded mt-1 inline-block">Born: Ireland</span>
-                            </div>
-                            <div onclick="selectPerson('mary_ellen_mcgarry')" class="davy-node w-52 p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg">
-                                <h4 class="font-bold text-sm">Mary Ellen McGarry</h4>
-                                <p class="text-xs text-gray-400">1830 - 1900s</p>
-                                <span class="text-[9px] bg-green-900/40 text-green-300 px-1.5 py-0.5 rounded mt-1 inline-block">Born: Scotland</span>
-                            </div>
-                        </div>
-                        <div class="col-span-3 flex justify-center items-center">
-                            <div onclick="selectPerson('malachi_cummings_ii')" class="cummings-node w-64 p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg">
-                                <h4 class="font-bold text-sm">Malachi Cummings II</h4>
-                                <p class="text-xs text-gray-400">1800 - 1886</p>
-                                <p class="text-xs text-gray-400">m. Edith "Edy" Brookshire</p>
-                                <span class="text-[9px] bg-red-900/40 text-red-300 px-1.5 py-0.5 rounded mt-1 inline-block">White County, TN</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-4 gap-4 border-b border-gray-900 pb-6">
-                        <div class="flex flex-col items-center justify-center">
-                            <div onclick="selectPerson('hugh_davy_ii')" class="davy-node w-52 p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg">
-                                <h4 class="font-bold text-sm">Hugh Davy (II)</h4>
-                                <p class="text-xs text-gray-400">1852 - 1922</p>
-                                <span class="text-[9px] bg-blue-900/40 text-blue-300 px-1.5 py-0.5 rounded mt-1 inline-block">Moved to Hendersonville TN</span>
-                            </div>
-                        </div>
-                        <div class="col-span-3 flex justify-center items-center">
-                            <div onclick="selectPerson('william_madison_cummings')" class="cummings-node w-64 p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg">
-                                <h4 class="font-bold text-sm">William Madison Cummings</h4>
-                                <p class="text-xs text-gray-400">1831 - 1913</p>
-                                <p class="text-xs text-gray-400">m. Sarah H. Moore</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-center items-center gap-12">
-                        <div class="flex items-center gap-4 bg-gradient-to-r from-blue-950/50 to-red-950/50 p-4 rounded-2xl border border-amber-500/30">
-                            <div onclick="selectPerson('annie_davy')" class="davy-node w-48 p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg">
-                                <h4 class="font-bold text-sm text-blue-300">Annie Davy</h4>
-                                <p class="text-xs text-gray-400">1872 - 1936</p>
-                            </div>
-                            <div class="flex flex-col items-center">
-                                <span class="text-xs text-amber-500 font-bold tracking-widest"><i class="fa-solid fa-heart text-red-500 text-lg mb-1"></i> UNION</span>
-                            </div>
-                            <div onclick="selectPerson('cyrus_alvin_cummings')" class="cummings-node w-48 p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg">
-                                <h4 class="font-bold text-sm text-red-300">Cyrus Alvin Cummings</h4>
-                                <p class="text-xs text-gray-400">1874 - 1943</p>
-                                <span class="text-[9px] bg-amber-900/40 text-amber-300 px-1.5 py-0.5 rounded mt-1 inline-block">Haxtun, CO Homestead</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-center">
-                        <div onclick="selectPerson('james_matthew_cummings')" class="cummings-node w-80 p-4 rounded-2xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg text-center">
-                            <h4 class="font-bold text-base text-amber-400">James Matthew "Matt" Cummings</h4>
-                            <p class="text-xs text-gray-400 mt-1">1899 - 1988</p>
-                            <p class="text-xs text-gray-300 mt-1">m. Zelma Loretta Pender (1903-1990)</p>
-                            <span class="text-[10px] bg-slate-900 border border-gray-800 text-gray-300 px-2 py-0.5 rounded-full mt-2 inline-block">Nashville & Colorado</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-5 gap-3">
-                        <div onclick="selectPerson('ann_frances_cummings')" class="cummings-node p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg text-center">
-                            <h5 class="font-bold text-xs">Ann Frances</h5>
-                            <p class="text-[10px] text-gray-400 mt-1">1921 - 2011</p>
-                        </div>
-                        <div onclick="selectPerson('james_melvin_buddy')" class="cummings-node p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg text-center bg-red-950/20">
-                            <h5 class="font-bold text-xs text-red-400">James Melvin "Buddy"</h5>
-                            <p class="text-[10px] text-gray-400 mt-1">1925 - 1944</p>
-                            <span class="text-[8px] bg-red-900/60 text-white px-1 rounded-full inline-block mt-1">WWII KIA</span>
-                        </div>
-                        <div onclick="selectPerson('theresa_katherine')" class="cummings-node p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg text-center">
-                            <h5 class="font-bold text-xs">Theresa Katherine</h5>
-                            <p class="text-[10px] text-gray-400 mt-1">1929 - 2016</p>
-                        </div>
-                        <div onclick="selectPerson('mary_lois')" class="cummings-node p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg text-center">
-                            <h5 class="font-bold text-xs">Mary Lois</h5>
-                            <p class="text-[10px] text-gray-400 mt-1">1931 - 2015</p>
-                        </div>
-                        <div onclick="selectPerson('anthony_duane')" class="cummings-node p-3 rounded-xl cursor-pointer hover:scale-105 hover:bg-slate-800/80 transition-all shadow-lg text-center">
-                            <h5 class="font-bold text-xs text-amber-500">Anthony Duane</h5>
-                            <p class="text-[10px] text-gray-400 mt-1">1936 - 2007</p>
-                            <span class="text-[8px] text-gray-500 block mt-1">m. Margaret Grubbs</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="view-cemetery" class="hidden flex-1 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-lg font-bold text-gray-200 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-amber-500"></span> Smathers Cemetery Plat Map
-                    </h2>
-                    <p class="text-sm text-gray-400 mt-1">Click on any plot to locate buried descendants and view historical cemetery records.</p>
-                </div>
-
-                <div class="my-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div class="bg-gray-900/60 p-6 rounded-2xl border border-gray-800/80 max-w-lg mx-auto w-full">
-                        <div class="text-center font-bold text-xs uppercase tracking-wider text-gray-500 mb-4">Smathers Family Plot Layout</div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div onclick="highlightPlot(1, 'kate_davy')" class="plot-card bg-gray-950 border border-gray-800 p-4 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-slate-900/50 transition-all flex justify-between items-center">
-                                <div>
-                                    <span class="text-xs font-bold text-amber-500 block">Plot 1</span>
-                                    <span class="text-sm font-semibold text-gray-200">Kate P. Davy</span>
-                                </div>
-                                <i class="fa-solid fa-tombstone text-gray-700"></i>
-                            </div>
-                            <div onclick="highlightPlot(2, 'marg_jos_davy')" class="plot-card bg-gray-950 border border-gray-800 p-4 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-slate-900/50 transition-all flex justify-between items-center">
-                                <div>
-                                    <span class="text-xs font-bold text-amber-500 block">Plot 2</span>
-                                    <span class="text-sm font-semibold text-gray-200 text-ellipsis">Margaret J. Davy</span>
-                                </div>
-                                <i class="fa-solid fa-tombstone text-gray-700"></i>
-                            </div>
-                            <div onclick="highlightPlot(3, 'mary_ellen_mcgarry')" class="plot-card bg-gray-950 border border-gray-800 p-4 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-slate-900/50 transition-all flex justify-between items-center">
-                                <div>
-                                    <span class="text-xs font-bold text-amber-500 block">Plot 3</span>
-                                    <span class="text-sm font-semibold text-gray-200">Mary Ellen Davy</span>
-                                </div>
-                                <i class="fa-solid fa-tombstone text-gray-700"></i>
-                            </div>
-                            <div onclick="highlightPlot(4, 'james_thomas_davy_i')" class="plot-card bg-gray-950 border border-gray-800 p-4 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-slate-900/50 transition-all flex justify-between items-center">
-                                <div>
-                                    <span class="text-xs font-bold text-amber-500 block">Plot 4</span>
-                                    <span class="text-sm font-semibold text-gray-200">James T. Davy I</span>
-                                </div>
-                                <i class="fa-solid fa-tombstone text-gray-700"></i>
-                            </div>
-                            <div class="bg-gray-950/20 border border-dashed border-gray-850 p-4 rounded-xl flex justify-between items-center opacity-50">
-                                <div>
-                                    <span class="text-xs font-bold text-gray-600 block">Plot 5</span>
-                                    <span class="text-sm font-semibold text-gray-600">Reserved / Empty</span>
-                                </div>
-                                <i class="fa-solid fa-ban text-gray-800"></i>
-                            </div>
-                            <div onclick="highlightPlot(6, 'alexander_davy')" class="plot-card bg-gray-950 border border-gray-800 p-4 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-slate-900/50 transition-all flex justify-between items-center">
-                                <div>
-                                    <span class="text-xs font-bold text-amber-500 block">Plot 6</span>
-                                    <span class="text-sm font-semibold text-gray-200">Alexander J. Davy</span>
-                                </div>
-                                <i class="fa-solid fa-tombstone text-gray-700"></i>
-                            </div>
-                            <div onclick="highlightPlot(7, 'robert_hugh_davy')" class="plot-card bg-gray-950 border border-gray-800 p-4 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-slate-900/50 transition-all flex justify-between items-center">
-                                <div>
-                                    <span class="text-xs font-bold text-amber-500 block">Plot 7</span>
-                                    <span class="text-sm font-semibold text-gray-200">Robert Hugh Davy</span>
-                                </div>
-                                <i class="fa-solid fa-tombstone text-gray-700"></i>
-                            </div>
-                            <div onclick="highlightPlot(8, 'william_ed_davy')" class="plot-card bg-gray-950 border border-gray-800 p-4 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-slate-900/50 transition-all flex justify-between items-center">
-                                <div>
-                                    <span class="text-xs font-bold text-amber-500 block">Plot 8</span>
-                                    <span class="text-sm font-semibold text-gray-200">William Ed Davy</span>
-                                </div>
-                                <i class="fa-solid fa-tombstone text-gray-700"></i>
-                            </div>
-                            <div onclick="highlightPlot(9, 'mollie_davy')" class="plot-card bg-gray-950 border border-gray-800 p-4 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-slate-900/50 transition-all flex justify-between items-center">
-                                <div>
-                                    <span class="text-xs font-bold text-amber-500 block">Plot 9</span>
-                                    <span class="text-sm font-semibold text-gray-200">Mary Ellen "Mollie"</span>
-                                </div>
-                                <i class="fa-solid fa-tombstone text-gray-700"></i>
-                            </div>
-                            <div class="bg-gray-950/20 border border-dashed border-gray-850 p-4 rounded-xl flex justify-between items-center opacity-50">
-                                <div>
-                                    <span class="text-xs font-bold text-gray-600 block">Plot 10</span>
-                                    <span class="text-sm font-semibold text-gray-600">Reserved / Hatched</span>
-                                </div>
-                                <i class="fa-solid fa-ban text-gray-800"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="cemetery-bio" class="bg-gray-900/40 p-6 rounded-2xl border border-gray-800 flex flex-col justify-center min-h-[250px]">
-                        <div class="text-center text-gray-500">
-                            <i class="fa-solid fa-tombstone text-4xl mb-3 text-amber-500/40"></i>
-                            <h3 class="text-lg font-bold text-gray-300">Select a Plot</h3>
-                            <p class="text-sm text-gray-400 mt-1 max-w-sm mx-auto">Click any occupied plot on the left layout map to display burial details, family relationship status, and historical cemetery references.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="view-migration" class="hidden flex-1 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-lg font-bold text-gray-200 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Transatlantic & Continental Migrations
-                    </h2>
-                    <p class="text-sm text-gray-400 mt-1">Trace the geographical timeline of generations moving across continents and states.</p>
-                </div>
-
-                <div class="my-6 grid grid-cols-1 md:grid-cols-4 gap-4 relative">
-                    <div class="bg-gray-900/40 border border-gray-800 p-5 rounded-2xl flex flex-col justify-between relative">
-                        <div class="absolute -top-3 left-4 bg-blue-600 text-gray-950 text-xs font-bold px-2.5 py-0.5 rounded-full">Step 1</div>
-                        <div class="mt-2">
-                            <h3 class="text-lg font-bold text-blue-300 flex items-center gap-2"><i class="fa-solid fa-clover"></i> Ireland Origins</h3>
-                            <p class="text-xs text-gray-400 mt-2 leading-relaxed">Hugh Davy I (1800-1886) resided in Tipperary, Ireland. His premature death during the pre-Famine era initiated the family's westward migration.</p>
-                        </div>
-                        <div class="text-[10px] text-amber-500 font-bold mt-4 uppercase tracking-wider"><i class="fa-solid fa-location-dot"></i> Tipperary, Ireland</div>
-                    </div>
-
-                    <div class="bg-gray-900/40 border border-gray-800 p-5 rounded-2xl flex flex-col justify-between relative">
-                        <div class="absolute -top-3 left-4 bg-indigo-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">Step 2</div>
-                        <div class="mt-2">
-                            <h3 class="text-lg font-bold text-indigo-300 flex items-center gap-2"><i class="fa-solid fa-industry"></i> Industrial Scotland</h3>
-                            <p class="text-xs text-gray-400 mt-2 leading-relaxed">Mary Ellen McGarry was born in Scotland, representing the family's mid-century migration to Scottish industrial and mining hubs.</p>
-                        </div>
-                        <div class="text-[10px] text-amber-500 font-bold mt-4 uppercase tracking-wider"><i class="fa-solid fa-location-dot"></i> Glasgow, Scotland</div>
-                    </div>
-
-                    <div class="bg-gray-900/40 border border-gray-800 p-5 rounded-2xl flex flex-col justify-between relative">
-                        <div class="absolute -top-3 left-4 bg-emerald-600 text-gray-950 text-xs font-bold px-2.5 py-0.5 rounded-full">Step 3</div>
-                        <div class="mt-2">
-                            <h3 class="text-lg font-bold text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-wheat-awn"></i> Sumner County</h3>
-                            <p class="text-xs text-gray-400 mt-2 leading-relaxed">James Thomas Davy I and Mary Ellen McGarry settled in Sumner County, Tennessee, shifting the family's lineage from labor to Tennessee agriculture.</p>
-                        </div>
-                        <div class="text-[10px] text-amber-500 font-bold mt-4 uppercase tracking-wider"><i class="fa-solid fa-location-dot"></i> Hendersonville, TN</div>
-                    </div>
-
-                    <div class="bg-gray-900/40 border border-gray-800 p-5 rounded-2xl flex flex-col justify-between relative">
-                        <div class="absolute -top-3 left-4 bg-amber-600 text-gray-950 text-xs font-bold px-2.5 py-0.5 rounded-full">Step 4</div>
-                        <div class="mt-2">
-                            <h3 class="text-lg font-bold text-amber-300 flex items-center gap-2"><i class="fa-solid fa-mountain-sun"></i> Western Plains</h3>
-                            <p class="text-xs text-gray-400 mt-2 leading-relaxed">Cyrus Alvin Cummings and Annie Davy homesteaded in Haxtun, Colorado, participating in the early 20th-century dry-land homesteading boom.</p>
-                        </div>
-                        <div class="text-[10px] text-amber-500 font-bold mt-4 uppercase tracking-wider"><i class="fa-solid fa-location-dot"></i> Haxtun, CO</div>
-                    </div>
-                </div>
-            </div>
-
+        <div class="person p-davy" onclick="selectPerson('thady_mcgarry')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Thadeus McGarry <span class="p-nick">&ldquo;Thady&rdquo;</span></div>
+          <div class="p-dates">early 1800s</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Ireland / Scotland</span></div>
+          <span class="badge davy">Davy line</span>
         </div>
-
-        <div class="xl:col-span-1 bg-gray-950/80 border border-gray-850 rounded-2xl p-6 flex flex-col justify-between shadow-2xl relative">
-            <div id="default-panel-view" class="text-center py-20">
-                <i class="fa-solid fa-address-card text-5xl text-gray-700 mb-4"></i>
-                <h3 class="text-lg font-bold text-gray-300">Select an Ancestor</h3>
-                <p class="text-sm text-gray-400 mt-2">Click any family member's card in the tree, cemetery plat map, or timeline to inspect census, military, and historical details.</p>
-            </div>
-
-            <div id="dynamic-panel-view" class="hidden flex-1 flex flex-col justify-between">
-                <div>
-                    <div class="border-b border-gray-850 pb-4 mb-4">
-                        <div class="flex items-center gap-2">
-                            <span id="ancestor-branch" class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider"></span>
-                        </div>
-                        <h2 id="ancestor-name" class="serif-title text-2xl font-bold mt-2 text-white"></h2>
-                        <p id="ancestor-dates" class="text-sm text-amber-500 font-semibold mt-1"></p>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div>
-                            <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider block">Primary Locations</span>
-                            <p id="ancestor-location" class="text-sm text-gray-200 font-semibold mt-1"></p>
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider block">Lineage Role</span>
-                            <p id="ancestor-role" class="text-sm text-gray-200 mt-1 leading-relaxed"></p>
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider block">Historical Context</span>
-                            <p id="ancestor-bio" class="text-xs text-gray-400 mt-1 leading-relaxed"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-t border-gray-850 pt-4 mt-6">
-                    <span class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block">Archival Reference Status</span>
-                    <div class="flex items-center gap-2 mt-2">
-                        <span class="text-xs bg-emerald-950/40 text-emerald-400 border border-emerald-900/50 px-2 py-1 rounded-md flex items-center gap-1.5 font-medium">
-                            <i class="fa-solid fa-circle-check"></i> Documented
-                        </span>
-                    </div>
-                </div>
-            </div>
+        <div class="person p-cummings" onclick="selectPerson('malachi_cummings_sr')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Malachi Cummins Sr.</div>
+          <div class="p-dates">c. 1695 – 1769</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Fauquier Co., Virginia Colony</span></div>
+          <span class="badge cummings">Cummings line</span>
         </div>
+      </div>
+    </div>
 
-    </main>
+    <div class="down-link"><svg width="16" height="26" viewBox="0 0 16 26" fill="none" stroke="#bcb3a3" stroke-width="1.5"><path d="M8 0v20m0 0-5-5m5 5 5-5"/></svg></div>
 
-    <script>
-        // Database of Ancestor Information matching the family heritage report
-        const database = {
-            hugh_davy_i: {
-                name: "Hugh Davy I",
-                dates: "1800 - 1886",
-                branch: "Davy",
-                location: "Tipperary, Ireland",
-                role: "Patriarch of the original Irish Catholic Davy lineage.",
-                bio: "Resided in Ireland during the early 19th century. His lineage navigated the pre-Famine era, setting the foundations for his widow Margaret 'Peggy' Burke and children to seek survival through eventual emigration to the United States."
-            },
-            thady_mcgarry: {
-                name: "Thadeus 'Thady' McGarry",
-                dates: "1813 - 1800",
-                branch: "Davy",
-                location: "Ireland / Scotland",
-                role: "Spouse of Margaret McGarry; maternal grandfather of Annie Davy.",
-                bio: "Represented the common migration of industrial labor forces from Ireland over to the industrial corridors of Western Scotland before his direct descendants made the transatlantic voyage."
-            },
-            james_thomas_davy_i: {
-                name: "James Thomas Davy I",
-                dates: "1829 - 1913",
-                branch: "Davy",
-                location: "Ireland, Scotland, Sumner County, TN",
-                role: "Second-generation patriarch; husband to Mary Ellen McGarry.",
-                bio: "Born in Ireland. Migrated to Scotland where he married Mary Ellen McGarry, and later established the family's farm and local legacy in Hendersonville, Sumner County, Tennessee."
-            },
-            mary_ellen_mcgarry: {
-                name: "Mary Ellen McGarry",
-                dates: "1830 - 1900s",
-                branch: "Davy",
-                location: "Scotland; Sumner County, TN",
-                role: "Second-generation matriarch; wife of James Thomas Davy I.",
-                bio: "Born in Scotland. She married James Thomas Davy I, establishing a permanent home in Tennessee after their transatlantic relocation."
-            },
-            hugh_davy_ii: {
-                name: "Hugh Davy (II)",
-                dates: "1852 - 1922",
-                branch: "Davy",
-                location: "Born: Scotland; Died: Sumner County, TN",
-                role: "Son of James Thomas Davy I and Mary Ellen McGarry.",
-                bio: "Born in Scotland, he immigrated with his parents to Hendersonville, TN. He married Margaret Katherine Davy (1853-1901), continuing the local agricultural and Catholic parish legacy."
-            },
-            malachi_cummings_sr: {
-                name: "Malachi Cummins Sr.",
-                dates: "c. 1695 - 1769",
-                branch: "Cummings",
-                location: "Fauquier County, Virginia Colony",
-                role: "Colonial Virginia planter; founder of the senior American branch.",
-                bio: "A substantial colonial landowner in the Virginia Piedmont. Modern Y-DNA genetic testing (Haplogroup R-BY116549) verifies the descent patterns of his offspring moving westward."
-            },
-            malachi_cummings_ii: {
-                name: "Malachi Cummings II",
-                dates: "1800 - 1886",
-                branch: "Cummings",
-                location: "White County, Tennessee",
-                role: "Pioneer farmer of Tennessee's early statehood era.",
-                bio: "Married Edith 'Edy' Brookshire (1813-1880). Together, they expanded the frontier farming operations of the Cummings family on the Cumberland Plateau."
-            },
-            william_madison_cummings: {
-                name: "William Madison Cummings",
-                dates: "1831 - 1913",
-                branch: "Cummings",
-                location: "White County & Davidson County, TN",
-                role: "Son of Malachi Cummings II and Edith Brookshire.",
-                bio: "Married Sarah H. Moore (1836-1924). He led the transition of the family branch from rural plateau farming into the growing industrial/urban center of Nashville."
-            },
-            annie_davy: {
-                name: "Annie Davy",
-                dates: "1872 - 1936",
-                branch: "Davy",
-                location: "Sumner County, TN; Phillips County, CO",
-                role: "Spouse to Cyrus Alvin Cummings.",
-                bio: "Daughter of Hugh Davy II and Margaret Katherine Davy. Her marriage with Cyrus Alvin Cummings in Hendersonville united the Irish-Catholic Davy line with the Anglo-Virginian Cummings line."
-            },
-            cyrus_alvin_cummings: {
-                name: "Cyrus Alvin Cummings",
-                dates: "1874 - 1943",
-                branch: "Cummings",
-                location: "Davidson County, TN; Phillips County, CO",
-                role: "Son of William Madison Cummings and Sarah H. Moore.",
-                bio: "A participant in the early 20th-century dry-land homesteading boom. He migrated to Haxtun, Colorado with his family before returning to Middle Tennessee."
-            },
-            james_matthew_cummings: {
-                name: "James Matthew 'Matt' Cummings",
-                dates: "1899 - 1988",
-                branch: "Cummings",
-                location: "Haxtun, CO; Davidson County, TN",
-                role: "Son of Cyrus Alvin Cummings and Annie Davy.",
-                bio: "Known as 'Matt', 'Rooster', or 'Buster'. Married Zelma Loretta Pender (1903-1990). He navigated the Great Depression and Dust Bowl in Colorado before moving the family back to Nashville."
-            },
-            ann_frances_cummings: {
-                name: "Ann Frances Cummings Manning",
-                dates: "1921 - 2011",
-                branch: "Cummings",
-                location: "Colorado; Nashville, TN",
-                role: "Daughter of James Matthew and Zelma Loretta Cummings.",
-                bio: "Lived through the transition of the extended family from dry-land western farming back to Middle Tennessee."
-            },
-            james_melvin_buddy: {
-                name: "James Melvin 'Buddy' Cummings",
-                dates: "1925 - 1944",
-                branch: "Cummings",
-                location: "Sumner County, TN",
-                role: "WWII Casualty; Son of James Matthew and Zelma Loretta Cummings.",
-                bio: "Enlisted in the United States military during World War II. He made the ultimate sacrifice in combat in June of 1944 at the young age of nineteen."
-            },
-            theresa_katherine: {
-                name: "Theresa Katherine Cummings",
-                dates: "1929 - 2016",
-                branch: "Cummings",
-                location: "Ashland City & Franklin, TN",
-                role: "Daughter of James Matthew and Zelma Loretta Cummings.",
-                bio: "Co-founded 'Wings of Hope' in Franklin, Tennessee. Married Paul Ernest Freudeman, leaving behind a profound legacy of regional community and faith leadership."
-            },
-            mary_lois: {
-                name: "Mary Lois Cummings",
-                dates: "1931 - 2015",
-                branch: "Cummings",
-                location: "Davidson County, TN",
-                role: "Daughter of James Matthew and Zelma Loretta Cummings.",
-                bio: "A community-focused resident of Davidson County, remembered affectionately by family as 'Lois'."
-            },
-            anthony_duane: {
-                name: "Anthony Duane Cummings Sr.",
-                dates: "1936 - 2007",
-                branch: "Cummings",
-                location: "Nashville & Madison, TN",
-                role: "Son of James Matthew and Zelma Loretta Cummings.",
-                bio: "Married Margaret Grubbs (1937-). He was instrumental in maintaining the direct 20th-century lineage of the Cummings family in the Madison, Tennessee area."
-            },
-            kate_davy: {
-                name: "Kate P. Davy (Plot 1)",
-                dates: "1860 - 1936",
-                branch: "Davy",
-                location: "Smathers Cemetery - Plot 1",
-                role: "Daughter of James Thomas Davy I.",
-                bio: "Originally Katherine Philomena Davy. Maintained lifelong ties to the family's Hendersonville parish, and was laid to rest in Plot 1 of the family cemetery lot."
-            },
-            marg_jos_davy: {
-                name: "Margaret Josephine Davy (Plot 2)",
-                dates: "1858 - 1909",
-                branch: "Davy",
-                location: "Smathers Cemetery - Plot 2",
-                role: "Daughter of James Thomas Davy I.",
-                bio: "Buried adjacent to her sister Kate. She assisted in preserving the family's local land records in Sumner County."
-            },
-            alexander_davy: {
-                name: "Alexander James Davy (Plot 6)",
-                dates: "19th Century",
-                branch: "Davy",
-                location: "Smathers Cemetery - Plot 6",
-                role: "Collateral descendant child of the Davy line.",
-                bio: "Reflects the high infant and child mortality rates typical of the 19th-century frontier."
-            },
-            robert_hugh_davy: {
-                name: "Robert Hugh Davy (Plot 7)",
-                dates: "1901 - 1987",
-                branch: "Davy",
-                location: "Smathers Cemetery - Plot 7",
-                role: "Son of James Thomas Davy II.",
-                bio: "Preserved as part of the family's 20th-century Sumner County lineage."
-            },
-            william_ed_davy: {
-                name: "William Edward Davy (Plot 8)",
-                dates: "19th - 20th Century",
-                branch: "Davy",
-                location: "Smathers Cemetery - Plot 8",
-                role: "Collateral descendant of William J. Davy.",
-                bio: "A vital regional family representative, buried in Plot 8 of the contiguous lot."
-            },
-            mollie_davy: {
-                name: "Mary Ellen 'Mollie' Davy (Plot 9)",
-                dates: "1868 - 1929",
-                branch: "Davy",
-                location: "Smathers Cemetery - Plot 9",
-                role: "Spouse to William J. Davy.",
-                bio: "Laid to rest in Plot 9, bordering her immediate extended family."
-            }
-        };
+    <div class="gen">
+      <div class="gen-label"><span class="gen-num">Generation II</span><span class="gen-title">The Crossing &amp; the Plateau</span></div>
+      <div class="row">
+        <div class="person p-davy" onclick="selectPerson('james_thomas_davy_i')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">James Thomas Davy I</div>
+          <div class="p-dates">1829 – 1913</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>b. Ireland → Sumner Co., TN</span></div>
+          <span class="badge davy">Davy line</span>
+        </div>
+        <div class="person p-davy" onclick="selectPerson('mary_ellen_mcgarry')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Mary Ellen McGarry</div>
+          <div class="p-dates">1830 – 1900s</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>b. Scotland → Sumner Co., TN</span></div>
+          <span class="badge davy">Davy line</span>
+        </div>
+        <div class="person p-cummings" onclick="selectPerson('malachi_cummings_ii')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Malachi Cummings II</div>
+          <div class="p-dates">1800 – 1886</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>White County, TN · m. Edith "Edy" Brookshire</span></div>
+          <span class="badge cummings">Cummings line</span>
+        </div>
+      </div>
+    </div>
 
-        // Tab Switching Engine
-        function switchTab(tabId) {
-            // Hide all views
-            document.getElementById('view-tree').classList.add('hidden');
-            document.getElementById('view-cemetery').classList.add('hidden');
-            document.getElementById('view-migration').classList.add('hidden');
+    <div class="down-link"><svg width="16" height="26" viewBox="0 0 16 26" fill="none" stroke="#bcb3a3" stroke-width="1.5"><path d="M8 0v20m0 0-5-5m5 5 5-5"/></svg></div>
 
-            // De-activate all tab buttons
-            const buttons = ['tab-tree', 'tab-cemetery', 'tab-migration'];
-            buttons.forEach(btn => {
-                document.getElementById(btn).className = "px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-400 hover:text-white";
-            });
+    <div class="gen">
+      <div class="gen-label"><span class="gen-num">Generation III</span><span class="gen-title">Hendersonville &amp; Nashville</span></div>
+      <div class="row">
+        <div class="person p-davy" onclick="selectPerson('hugh_davy_ii')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Hugh Davy II</div>
+          <div class="p-dates">1852 – 1922</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>b. Scotland → Hendersonville, TN</span></div>
+          <span class="badge davy">Davy line</span>
+        </div>
+        <div class="person p-cummings" onclick="selectPerson('william_madison_cummings')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">William Madison Cummings</div>
+          <div class="p-dates">1831 – 1913</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>White Co. → Davidson Co., TN · m. Sarah H. Moore</span></div>
+          <span class="badge cummings">Cummings line</span>
+        </div>
+      </div>
+    </div>
 
-            // Show active view & set class to active button
-            document.getElementById('view-' + tabId).classList.remove('hidden');
-            const activeBtn = document.getElementById('tab-' + tabId);
-            activeBtn.className = "px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 bg-amber-600 text-gray-950 shadow-md";
-        }
+    <div class="down-link"><svg width="16" height="26" viewBox="0 0 16 26" fill="none" stroke="#bcb3a3" stroke-width="1.5"><path d="M8 0v20m0 0-5-5m5 5 5-5"/></svg></div>
 
-        // Sidebar Dynamic Selection Engine
-        function selectPerson(id) {
-            const data = database[id];
-            if (!data) return;
+    <div class="gen">
+      <div class="gen-label"><span class="gen-num">Generation IV</span><span class="gen-title">The Union</span></div>
+      <div class="union-callout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="14" r="6"/><circle cx="15" cy="14" r="6"/><path d="M9 8l3-4 3 4"/></svg>
+        <div><b>The hinge of the tree.</b> Annie Davy married Cyrus Alvin Cummings in Hendersonville — joining the Irish Catholic Davy line to the Anglo-Virginian Cummings line.</div>
+      </div>
+      <div class="row">
+        <div class="person p-union" onclick="selectPerson('annie_davy')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Annie Davy</div>
+          <div class="p-dates">1872 – 1936</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Sumner Co., TN · Phillips Co., CO</span></div>
+          <span class="badge union">Davy ⇄ Cummings</span>
+        </div>
+        <div class="person p-union" onclick="selectPerson('cyrus_alvin_cummings')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Cyrus Alvin Cummings</div>
+          <div class="p-dates">1874 – 1943</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Davidson Co., TN · Haxtun, CO homestead</span></div>
+          <span class="badge union">Davy ⇄ Cummings</span>
+        </div>
+      </div>
+    </div>
 
-            document.getElementById('default-panel-view').classList.add('hidden');
-            
-            const dynamicView = document.getElementById('dynamic-panel-view');
-            dynamicView.classList.remove('hidden');
+    <div class="down-link"><svg width="16" height="26" viewBox="0 0 16 26" fill="none" stroke="#bcb3a3" stroke-width="1.5"><path d="M8 0v20m0 0-5-5m5 5 5-5"/></svg></div>
 
-            // Populate text
-            document.getElementById('ancestor-name').innerText = data.name;
-            document.getElementById('ancestor-dates').innerText = data.dates;
-            document.getElementById('ancestor-location').innerText = data.location;
-            document.getElementById('ancestor-role').innerText = data.role;
-            document.getElementById('ancestor-bio').innerText = data.bio;
+    <div class="gen">
+      <div class="gen-label"><span class="gen-num">Generation V</span><span class="gen-title">Colorado &amp; Home Again</span></div>
+      <div class="row">
+        <div class="person p-cummings" onclick="selectPerson('james_matthew_cummings')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">James Matthew Cummings <span class="p-nick">&ldquo;Matt&rdquo;</span></div>
+          <div class="p-dates">1899 – 1988</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Haxtun, CO · Nashville, TN · m. Zelma Loretta Pender</span></div>
+          <span class="badge cummings">Cummings line</span>
+        </div>
+      </div>
+    </div>
 
-            // Set styling based on Branch
-            const branchBadge = document.getElementById('ancestor-branch');
-            branchBadge.innerText = data.branch + " Line";
-            if (data.branch === "Davy") {
-                branchBadge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded uppercase tracking-wider bg-blue-900/40 text-blue-300 border border-blue-700/30";
-            } else {
-                branchBadge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded uppercase tracking-wider bg-red-950/40 text-red-300 border border-red-700/30";
-            }
-        }
+    <div class="down-link"><svg width="16" height="26" viewBox="0 0 16 26" fill="none" stroke="#bcb3a3" stroke-width="1.5"><path d="M8 0v20m0 0-5-5m5 5 5-5"/></svg></div>
 
-        // Cemetery Interactive Plat Highlight Engine
-        function highlightPlot(plotNum, id) {
-            // Clear prior active states on cards
-            const cards = document.querySelectorAll('.plot-card');
-            cards.forEach(card => {
-                card.classList.remove('border-amber-500', 'bg-amber-950/20');
-            });
+    <div class="gen">
+      <div class="gen-label"><span class="gen-num">Generation VI</span><span class="gen-title">The Modern Line</span></div>
+      <div class="row">
+        <div class="person p-cummings" onclick="selectPerson('ann_frances_cummings')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Ann Frances Cummings Manning</div>
+          <div class="p-dates">1921 – 2011</div>
+          <span class="badge cummings">Cummings line</span>
+        </div>
+        <div class="person p-cummings" onclick="selectPerson('james_melvin_buddy')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">James Melvin Cummings <span class="p-nick">&ldquo;Buddy&rdquo;</span></div>
+          <div class="p-dates">1925 – 1944</div>
+          <span class="badge war">WWII · KIA</span>
+        </div>
+        <div class="person p-cummings" onclick="selectPerson('theresa_katherine')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Theresa Katherine Cummings</div>
+          <div class="p-dates">1929 – 2016</div>
+          <span class="badge cummings">Cummings line</span>
+        </div>
+        <div class="person p-cummings" onclick="selectPerson('mary_lois')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Mary Lois Cummings</div>
+          <div class="p-dates">1931 – 2015</div>
+          <span class="badge cummings">Cummings line</span>
+        </div>
+        <div class="person p-cummings" onclick="selectPerson('anthony_duane')" role="button" tabindex="0">
+          <span class="stripe"></span>
+          <div class="p-name">Anthony Duane Cummings Sr.</div>
+          <div class="p-dates">1936 – 2007</div>
+          <div class="p-place"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>m. Margaret Grubbs</span></div>
+          <span class="badge cummings">Cummings line</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            // Set current card styling to highlighted
-            event.currentTarget.classList.add('border-amber-500', 'bg-amber-950/20');
+  <!-- ============ CEMETERY VIEW ============ -->
+  <section id="view-cemetery" class="hidden">
+    <div class="sec-head">
+      <h2>Smathers Cemetery Plat Map</h2>
+      <p class="sec-note">Tap any occupied plot to view the burial record, family relationship, and historical references.</p>
+    </div>
+    <div class="plot-grid">
+      <div class="plot" data-plot="1" onclick="highlightPlot(this,1,'kate_davy')">
+        <div><div class="num">Plot 1</div><div class="who">Kate P. Davy</div></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 21V9a6 6 0 0 1 12 0v12M4 21h16M9 12h6"/></svg>
+      </div>
+      <div class="plot" data-plot="2" onclick="highlightPlot(this,2,'marg_jos_davy')">
+        <div><div class="num">Plot 2</div><div class="who">Margaret J. Davy</div></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 21V9a6 6 0 0 1 12 0v12M4 21h16M9 12h6"/></svg>
+      </div>
+      <div class="plot" data-plot="3" onclick="highlightPlot(this,3,'mary_ellen_mcgarry')">
+        <div><div class="num">Plot 3</div><div class="who">Mary Ellen Davy</div></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 21V9a6 6 0 0 1 12 0v12M4 21h16M9 12h6"/></svg>
+      </div>
+      <div class="plot" data-plot="4" onclick="highlightPlot(this,4,'james_thomas_davy_i')">
+        <div><div class="num">Plot 4</div><div class="who">James T. Davy I</div></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 21V9a6 6 0 0 1 12 0v12M4 21h16M9 12h6"/></svg>
+      </div>
+      <div class="plot empty">
+        <div><div class="num">Plot 5</div><div class="who">Reserved / Empty</div></div>
+      </div>
+      <div class="plot" data-plot="6" onclick="highlightPlot(this,6,'alexander_davy')">
+        <div><div class="num">Plot 6</div><div class="who">Alexander J. Davy</div></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 21V9a6 6 0 0 1 12 0v12M4 21h16M9 12h6"/></svg>
+      </div>
+      <div class="plot" data-plot="7" onclick="highlightPlot(this,7,'robert_hugh_davy')">
+        <div><div class="num">Plot 7</div><div class="who">Robert Hugh Davy</div></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 21V9a6 6 0 0 1 12 0v12M4 21h16M9 12h6"/></svg>
+      </div>
+      <div class="plot" data-plot="8" onclick="highlightPlot(this,8,'william_ed_davy')">
+        <div><div class="num">Plot 8</div><div class="who">William Ed Davy</div></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 21V9a6 6 0 0 1 12 0v12M4 21h16M9 12h6"/></svg>
+      </div>
+      <div class="plot" data-plot="9" onclick="highlightPlot(this,9,'mollie_davy')">
+        <div><div class="num">Plot 9</div><div class="who">Mary Ellen "Mollie"</div></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 21V9a6 6 0 0 1 12 0v12M4 21h16M9 12h6"/></svg>
+      </div>
+      <div class="plot empty">
+        <div><div class="num">Plot 10</div><div class="who">Reserved / Hatched</div></div>
+      </div>
+    </div>
+    <p class="cem-foot">Smathers Cemetery Lot, Section II — several graves in the family board diagram remain unmarked.</p>
+  </section>
 
-            // Also dynamically select the ancestor's bio panel
-            selectPerson(id);
+  <!-- ============ MIGRATION VIEW ============ -->
+  <section id="view-migration" class="hidden">
+    <div class="sec-head">
+      <h2>Transatlantic &amp; Continental Migrations</h2>
+      <p class="sec-note">The geographical timeline of generations moving across continents and states.</p>
+    </div>
+    <div class="journey">
+      <div class="leg">
+        <div class="step">Step 1 · Ireland Origins</div>
+        <div class="yr">Pre-Famine</div>
+        <div class="pl">Tipperary, Ireland</div>
+        <div class="why">Hugh Davy I (1800–1886) resided in Tipperary; the pre-Famine era set the family's westward migration in motion.</div>
+      </div>
+      <div class="leg">
+        <div class="step">Step 2 · Industrial Scotland</div>
+        <div class="yr">Mid-1800s</div>
+        <div class="pl">Glasgow, Scotland</div>
+        <div class="why">Mary Ellen McGarry was born in Scotland — the family's move into the Scottish industrial and mining hubs.</div>
+      </div>
+      <div class="leg">
+        <div class="step">Step 3 · Sumner County</div>
+        <div class="yr">1850s–60s</div>
+        <div class="pl">Hendersonville, TN</div>
+        <div class="why">James Thomas Davy I and Mary Ellen McGarry settled in Sumner County, shifting the line from labor to Tennessee agriculture.</div>
+      </div>
+      <div class="leg c">
+        <div class="step">Step 4 · Western Plains</div>
+        <div class="yr">c. 1920</div>
+        <div class="pl">Haxtun, CO</div>
+        <div class="why">Cyrus Alvin Cummings and Annie Davy homesteaded at Haxtun in the early 20th-century dry-land boom.</div>
+      </div>
+    </div>
+  </section>
+</main>
 
-            // Populate cemetery bio sub-panel
-            const data = database[id];
-            const cemBio = document.getElementById('cemetery-bio');
-            cemBio.innerHTML = `
-                <div class="flex items-center gap-3 mb-2">
-                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                    <h4 class="font-bold text-sm text-amber-500">Plot ${plotNum} Record</h4>
-                </div>
-                <h3 class="font-bold text-base text-gray-200">${data.name}</h3>
-                <p class="text-xs text-amber-500 font-semibold mt-0.5">${data.dates}</p>
-                <p class="text-xs text-gray-400 mt-2">${data.bio}</p>
-                <span class="text-[9px] text-gray-500 mt-3 block uppercase tracking-wider"><i class="fa-solid fa-location-dot"></i> Smathers Cemetery Lot, Section II</span>
-            `;
-        }
-    </script>
+<footer>
+  <div class="wrap">
+    <span>Davy &amp; Cummings Heritage Dashboard · Compiled 2026.</span>
+    <span>Davy line <span style="color:var(--davy)">■</span> · Cummings line <span style="color:var(--cummings)">■</span></span>
+  </div>
+</footer>
+
+<!-- ============ DETAIL SHEET ============ -->
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Ancestor details">
+  <div class="grab"></div>
+  <div id="sheetContent"></div>
+</aside>
+
+<script>
+/* ================= DATA ================= */
+const database = {
+  hugh_davy_i:{name:"Hugh Davy I",dates:"1800 – 1886",branch:"Davy",location:"Tipperary, Ireland",
+    role:"Patriarch of the original Irish Catholic Davy lineage.",
+    bio:"Resided in Ireland during the early 19th century. His lineage navigated the pre-Famine era, setting the foundations for his widow Margaret 'Peggy' Burke and children to seek survival through eventual emigration to the United States."},
+  thady_mcgarry:{name:"Thadeus 'Thady' McGarry",dates:"early 1800s",branch:"Davy",location:"Ireland / Scotland",
+    role:"Spouse of Margaret McGarry; maternal grandfather of Annie Davy.",
+    bio:"Represented the common migration of industrial labor forces from Ireland over to the industrial corridors of Western Scotland before his direct descendants made the transatlantic voyage."},
+  james_thomas_davy_i:{name:"James Thomas Davy I",dates:"1829 – 1913",branch:"Davy",location:"Ireland, Scotland, Sumner County, TN",
+    role:"Second-generation patriarch; husband to Mary Ellen McGarry.",
+    bio:"Born in Ireland. Migrated to Scotland where he married Mary Ellen McGarry, and later established the family's farm and local legacy in Hendersonville, Sumner County, Tennessee."},
+  mary_ellen_mcgarry:{name:"Mary Ellen McGarry",dates:"1830 – 1900s",branch:"Davy",location:"Scotland; Sumner County, TN",
+    role:"Second-generation matriarch; wife of James Thomas Davy I.",
+    bio:"Born in Scotland. She married James Thomas Davy I, establishing a permanent home in Tennessee after their transatlantic relocation."},
+  hugh_davy_ii:{name:"Hugh Davy (II)",dates:"1852 – 1922",branch:"Davy",location:"Born: Scotland; Died: Sumner County, TN",
+    role:"Son of James Thomas Davy I and Mary Ellen McGarry.",
+    bio:"Born in Scotland, he immigrated with his parents to Hendersonville, TN. He married Margaret Katherine Davy (1853-1901), continuing the local agricultural and Catholic parish legacy."},
+  malachi_cummings_sr:{name:"Malachi Cummins Sr.",dates:"c. 1695 – 1769",branch:"Cummings",location:"Fauquier County, Virginia Colony",
+    role:"Colonial Virginia planter; founder of the senior American branch.",
+    bio:"A substantial colonial landowner in the Virginia Piedmont. Modern Y-DNA genetic testing (Haplogroup R-BY116549) verifies the descent patterns of his offspring moving westward."},
+  malachi_cummings_ii:{name:"Malachi Cummings II",dates:"1800 – 1886",branch:"Cummings",location:"White County, Tennessee",
+    role:"Pioneer farmer of Tennessee's early statehood era.",
+    bio:"Married Edith 'Edy' Brookshire (1813-1880). Together, they expanded the frontier farming operations of the Cummings family on the Cumberland Plateau."},
+  william_madison_cummings:{name:"William Madison Cummings",dates:"1831 – 1913",branch:"Cummings",location:"White County & Davidson County, TN",
+    role:"Son of Malachi Cummings II and Edith Brookshire.",
+    bio:"Married Sarah H. Moore (1836-1924). He led the transition of the family branch from rural plateau farming into the growing industrial/urban center of Nashville."},
+  annie_davy:{name:"Annie Davy",dates:"1872 – 1936",branch:"Davy",location:"Sumner County, TN; Phillips County, CO",
+    role:"Spouse to Cyrus Alvin Cummings.",
+    bio:"Daughter of Hugh Davy II and Margaret Katherine Davy. Her marriage with Cyrus Alvin Cummings in Hendersonville united the Irish-Catholic Davy line with the Anglo-Virginian Cummings line."},
+  cyrus_alvin_cummings:{name:"Cyrus Alvin Cummings",dates:"1874 – 1943",branch:"Cummings",location:"Davidson County, TN; Phillips County, CO",
+    role:"Son of William Madison Cummings and Sarah H. Moore.",
+    bio:"A participant in the early 20th-century dry-land homesteading boom. He migrated to Haxtun, Colorado with his family before returning to Middle Tennessee."},
+  james_matthew_cummings:{name:"James Matthew 'Matt' Cummings",dates:"1899 – 1988",branch:"Cummings",location:"Haxtun, CO; Davidson County, TN",
+    role:"Son of Cyrus Alvin Cummings and Annie Davy.",
+    bio:"Known as 'Matt', 'Rooster', or 'Buster'. Married Zelma Loretta Pender (1903-1990). He navigated the Great Depression and Dust Bowl in Colorado before moving the family back to Nashville."},
+  ann_frances_cummings:{name:"Ann Frances Cummings Manning",dates:"1921 – 2011",branch:"Cummings",location:"Colorado; Nashville, TN",
+    role:"Daughter of James Matthew and Zelma Loretta Cummings.",
+    bio:"Lived through the transition of the extended family from dry-land western farming back to Middle Tennessee."},
+  james_melvin_buddy:{name:"James Melvin 'Buddy' Cummings",dates:"1925 – 1944",branch:"Cummings",location:"Sumner County, TN",
+    role:"WWII Casualty; Son of James Matthew and Zelma Loretta Cummings.",
+    bio:"Enlisted in the United States military during World War II. He made the ultimate sacrifice in combat in June of 1944 at the young age of nineteen."},
+  theresa_katherine:{name:"Theresa Katherine Cummings",dates:"1929 – 2016",branch:"Cummings",location:"Ashland City & Franklin, TN",
+    role:"Daughter of James Matthew and Zelma Loretta Cummings.",
+    bio:"Co-founded 'Wings of Hope' in Franklin, Tennessee. Married Paul Ernest Freudeman, leaving behind a profound legacy of regional community and faith leadership."},
+  mary_lois:{name:"Mary Lois Cummings",dates:"1931 – 2015",branch:"Cummings",location:"Davidson County, TN",
+    role:"Daughter of James Matthew and Zelma Loretta Cummings.",
+    bio:"A community-focused resident of Davidson County, remembered affectionately by family as 'Lois'."},
+  anthony_duane:{name:"Anthony Duane Cummings Sr.",dates:"1936 – 2007",branch:"Cummings",location:"Nashville & Madison, TN",
+    role:"Son of James Matthew and Zelma Loretta Cummings.",
+    bio:"Married Margaret Grubbs (1937-). He was instrumental in maintaining the direct 20th-century lineage of the Cummings family in the Madison, Tennessee area."},
+  kate_davy:{name:"Kate P. Davy",dates:"1860 – 1936",branch:"Davy",location:"Smathers Cemetery — Plot 1",
+    role:"Daughter of James Thomas Davy I.",
+    bio:"Originally Katherine Philomena Davy. Maintained lifelong ties to the family's Hendersonville parish, and was laid to rest in Plot 1 of the family cemetery lot."},
+  marg_jos_davy:{name:"Margaret Josephine Davy",dates:"1858 – 1909",branch:"Davy",location:"Smathers Cemetery — Plot 2",
+    role:"Daughter of James Thomas Davy I.",
+    bio:"Buried adjacent to her sister Kate. She assisted in preserving the family's local land records in Sumner County."},
+  alexander_davy:{name:"Alexander James Davy",dates:"19th Century",branch:"Davy",location:"Smathers Cemetery — Plot 6",
+    role:"Collateral descendant child of the Davy line.",
+    bio:"Reflects the high infant and child mortality rates typical of the 19th-century frontier."},
+  robert_hugh_davy:{name:"Robert Hugh Davy",dates:"1901 – 1987",branch:"Davy",location:"Smathers Cemetery — Plot 7",
+    role:"Son of James Thomas Davy II.",
+    bio:"Preserved as part of the family's 20th-century Sumner County lineage."},
+  william_ed_davy:{name:"William Edward Davy",dates:"19th – 20th Century",branch:"Davy",location:"Smathers Cemetery — Plot 8",
+    role:"Collateral descendant of William J. Davy.",
+    bio:"A vital regional family representative, buried in Plot 8 of the contiguous lot."},
+  mollie_davy:{name:"Mary Ellen 'Mollie' Davy",dates:"1868 – 1929",branch:"Davy",location:"Smathers Cemetery — Plot 9",
+    role:"Spouse to William J. Davy.",
+    bio:"Laid to rest in Plot 9, bordering her immediate extended family."}
+};
+
+/* ================= TABS ================= */
+function switchTab(tabId){
+  ["tree","cemetery","migration"].forEach(id=>{
+    document.getElementById("view-"+id).classList.toggle("hidden", id!==tabId);
+    document.getElementById("tab-"+id).dataset.active = (id===tabId) ? "true" : "false";
+  });
+}
+
+/* ================= DETAIL SHEET ================= */
+const overlay = document.getElementById("overlay");
+const sheet = document.getElementById("sheet");
+const sheetContent = document.getElementById("sheetContent");
+
+function selectPerson(id, plotNum){
+  const p = database[id];
+  if(!p) return;
+  const lineClass = p.branch==="Davy" ? "davy" : "cummings";
+  const lineLabel = p.branch==="Davy" ? "Davy line · Ireland" : "Cummings line · Virginia roots";
+  sheetContent.innerHTML = `
+    <div class="s-line ${lineClass}">${lineLabel}</div>
+    <h3>${p.name}</h3>
+    <div class="s-dates">${p.dates}</div>
+    <dl class="facts">
+      ${plotNum?`<div class="fact"><dt>Burial</dt><dd>Smathers Cemetery Lot, Section II — Plot ${plotNum}</dd></div>`:""}
+      <div class="fact"><dt>Locations</dt><dd>${p.location}</dd></div>
+      <div class="fact"><dt>Lineage role</dt><dd>${p.role}</dd></div>
+    </dl>
+    <div class="s-notes"><p>${p.bio}</p></div>
+    <div class="s-status"><span class="dot"></span> Archival reference — documented</div>`;
+  overlay.classList.add("open");
+  sheet.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeSheet(){
+  overlay.classList.remove("open");
+  sheet.classList.remove("open");
+  document.body.style.overflow = "";
+}
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeSheet(); });
+
+/* keyboard access on person cards */
+document.querySelectorAll(".person,.plot:not(.empty)").forEach(el=>{
+  el.addEventListener("keydown", e=>{
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+  });
+});
+
+/* ================= CEMETERY ================= */
+function highlightPlot(el, plotNum, id){
+  document.querySelectorAll(".plot").forEach(p=>p.classList.remove("active"));
+  el.classList.add("active");
+  selectPerson(id, plotNum);
+}
+
+/* swipe-down to close on mobile */
+let startY = null;
+sheet.addEventListener("touchstart", e=>{ if(sheet.scrollTop<=0) startY = e.touches[0].clientY; },{passive:true});
+sheet.addEventListener("touchmove", e=>{
+  if(startY!==null && e.touches[0].clientY - startY > 70){ closeSheet(); startY=null; }
+},{passive:true});
+sheet.addEventListener("touchend", ()=>{ startY=null; });
+</script>
 </body>
 </html>
